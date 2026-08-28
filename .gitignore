@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.gradio/
+models/*.onnx
+models/*.pth
+.sys_vault/
+*.jpg
+*.png
+*.jpeg
+*.webp
+.env
+.DS_Store
