@@ -7,7 +7,7 @@ os.makedirs(MODELS_DIR, exist_ok=True)
 
 MODELS = {
     "inswapper_128.onnx": "https://huggingface.co/ezioruan/inswapper_128.onnx/resolve/main/inswapper_128.onnx",
-    "gfpgan_1.4.onnx": "https://huggingface.co/facefusion/models/resolve/main/gfpgan_1.4.onnx"
+    "gfpgan_1.4.onnx": "https://huggingface.co/datasets/Gourieff/ReActor/resolve/main/models/facerestore_models/GFPGANv1.4.onnx"
 }
 
 def download_models():
