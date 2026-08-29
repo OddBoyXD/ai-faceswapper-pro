@@ -1,6 +1,6 @@
 # ⚡ AI Face Swapper Pro • Complete A-to-Z Guide
 
-An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
+An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, **InstantID SDXL (1024x1024 Photorealism)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
 
 ---
 
@@ -8,18 +8,20 @@ An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InS
 1. [🌟 Features & Capabilities](#-features--capabilities)
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
 3. [🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-a-to-z-installation-on-any-linux-vps-ubuntu--debian)
-4. [☁️ Option 2: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-2-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
-5. [🚀 Option 3: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-3-free-gpu-on-kaggle-30h-free-gpu-weekly)
-6. [⚡ Option 4: Free GPU on Google Colab (Nvidia T4 GPU)](#-option-4-free-gpu-on-google-colab-nvidia-t4-gpu)
-7. [💻 Option 5: Local Setup on Windows / Mac PC](#-option-5-local-setup-on-windows--mac-pc)
-8. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
-9. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
+4. [🌟 Option 2: Hollywood-Grade InstantID (SDXL 1024x1024) on Google Colab](#-option-2-hollywood-grade-instantid-sdxl-1024x1024-on-google-colab)
+5. [⚡ Option 3: Fast GPU Swap (InSwapper + GFPGAN) on Google Colab](#-option-3-fast-gpu-swap-inswapper--gfpgan-on-google-colab)
+6. [🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-4-free-gpu-on-kaggle-30h-free-gpu-weekly)
+7. [☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-5-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
+8. [💻 Option 6: Local Setup on Windows / Mac PC](#-option-6-local-setup-on-windows--mac-pc)
+9. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
+10. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
 
 ---
 
 ## 🌟 Features & Capabilities
 
-* **👤 1:1 Single Face Swap**: Instant swapping using InSwapper-128 + Ultra HD facial restoration with GFPGAN.
+* **🌟 InstantID SDXL 1024x1024 (Colab GPU Only)**: Native diffusion-based synthesis with real physical light bounces, authentic skin pores, and 10/10 Hollywood photorealism.
+* **👤 1:1 Single Face Swap**: Instant sub-second swapping using InSwapper-128 + Ultra HD facial restoration with GFPGAN.
 * **👥 2-Person Custom Swap**: Automatic face detection with thumbnail preview cards, allowing custom mapping of who gets which replacement face.
 * **🎯 Group Person Selector (3+ People)**: Crop preview selector to pick exactly 1 person to swap out of a large group.
 * **🌐 File Upload & Image URL Support**: Paste image URLs directly or upload from your device.
@@ -131,25 +133,62 @@ sudo certbot --nginx -d yourdomain.com
 
 ---
 
-## ☁️ Option 2: 100% Free 24/7 Hosting on Hugging Face Spaces (16 GB RAM)
+## 🌟 Option 2: Hollywood-Grade InstantID (SDXL 1024x1024) on Google Colab
 
-Hugging Face provides **16 GB RAM and 2 vCPUs for FREE forever**.
+> [!TIP]
+> **InstantID (SDXL)** gives **10/10 Photorealism** by generating physical light bounces, skin pores, and studio portraits at native 1024x1024 resolution. Runs on Free Nvidia T4 GPU in ~5 seconds!
 
-1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and click **"Create new Space"**.
-2. **Space Name**: `ai-faceswapper`
-3. **SDK**: Select **Gradio**.
-4. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)** or **ZeroGPU**.
-5. Connect your GitHub repository `https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git`.
-6. Hugging Face will automatically run and deploy your app with a permanent HTTPS link!
+Paste this into a **Google Colab** code cell:
+
+```python
+# 1. Step out and clone fresh repository with Auth Token
+%cd /content
+!rm -rf /content/faceswapper
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+%cd /content/faceswapper
+
+# 2. Install InstantID & SDXL Dependencies
+!pip install -q diffusers transformers accelerate insightface gradio opencv-python-headless pillow requests
+
+# 3. Launch InstantID 4K Web App with Free Share Link
+!python instantid_colab.py
+```
 
 ---
 
-## 🚀 Option 3: Free GPU on Kaggle (30h Free GPU Weekly)
+## ⚡ Option 3: Fast GPU Swap (InSwapper + GFPGAN) on Google Colab
+
+Paste this into a Google Colab code cell for sub-second classic face swaps:
+
+```python
+# 1. Step out and clone repository with Token
+%cd /content
+!rm -rf /content/faceswapper
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+%cd /content/faceswapper
+
+# 2. Install Dependencies
+!pip install -q fastapi uvicorn gradio insightface onnxruntime-gpu opencv-python-headless pillow requests
+
+# 3. Download AI Models
+!python download_models.py
+
+# 4. Clear Python memory cache & Launch with Free Share Link
+import sys
+if 'app' in sys.modules:
+    del sys.modules['app']
+import app
+app.demo.launch(share=True)
+```
+
+---
+
+## 🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)
 
 > [!IMPORTANT]
 > **Before running on Kaggle:**  
 > In the Kaggle notebook right sidebar:  
-> 1. Go to **Settings ➔ Internet** and turn it **ON** (Required to download models & libraries).  
+> 1. Go to **Settings ➔ Internet** and turn it **ON**.  
 > 2. Go to **Settings ➔ Accelerator** and select **GPU T4 x2** or **GPU P100**.
 
 Paste this code into a Kaggle code cell:
@@ -169,33 +208,20 @@ Paste this code into a Kaggle code cell:
 import app
 app.demo.launch(share=True)
 ```
-*(Gradio outputs a public `https://xxxx.gradio.live` link that you can open on your phone or desktop)*.
 
 ---
 
-## ⚡ Option 4: Free GPU on Google Colab (Nvidia T4 GPU)
+## ☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces (16 GB RAM)
 
-Paste this into a Google Colab notebook cell:
-
-```python
-# 1. Clone Private Repository to Colab Content Directory
-!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
-%cd /content/faceswapper
-
-# 2. Install Dependencies
-!pip install -q fastapi uvicorn gradio insightface onnxruntime-gpu opencv-python-headless pillow requests
-
-# 3. Download AI Models
-!python download_models.py
-
-# 4. Launch with Free Public Gradio Share Link
-import app
-app.demo.launch(share=True)
-```
+1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and click **"Create new Space"**.
+2. **Space Name**: `ai-faceswapper`
+3. **SDK**: Select **Gradio**.
+4. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)** or **ZeroGPU**.
+5. Connect your GitHub repository `https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git`.
 
 ---
 
-## 💻 Option 5: Local Setup on Windows / Mac PC
+## 💻 Option 6: Local Setup on Windows / Mac PC
 
 ### Windows (PowerShell):
 ```powershell
@@ -227,10 +253,12 @@ Open browser at: `http://localhost:7860`
 
 ```
 ai-faceswapper-pro/
-├── main.py                   # Main FastAPI & Gradio Server with Auth & Stealth Middleware
+├── main.py                   # Main FastAPI & Gradio Server for Linux VPS (Dual Auth + Stealth)
+├── instantid_colab.py        # Hollywood-Grade 1024x1024 InstantID SDXL engine (Google Colab GPU)
+├── instantid_colab.ipynb     # 1-Click InstantID Colab Notebook
+├── app.py                    # Fast InSwapper + GFPGAN runner
+├── ai_faceswapper_colab.ipynb# 1-Click Classic Fast Swap Colab Notebook
 ├── download_models.py        # Automated downloader for InSwapper & GFPGAN ONNX models
-├── app.py                    # Lightweight standalone Gradio runner
-├── ai_faceswapper_colab.ipynb# 1-Click Google Colab GPU notebook
 ├── run_server.py             # Process orchestrator script
 ├── requirements.txt          # Complete Python dependencies
 ├── .gitignore                # Ignores large binaries, caches, and secret data
