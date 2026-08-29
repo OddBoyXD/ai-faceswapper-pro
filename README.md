@@ -1,6 +1,6 @@
 # ⚡ AI Face Swapper Pro • Complete A-to-Z Guide
 
-An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, and role-based dual encrypted vaults.
+An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
 
 ---
 
@@ -22,6 +22,7 @@ An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InS
 * **👥 2-Person Custom Swap**: Automatic face detection with thumbnail preview cards, allowing custom mapping of who gets which replacement face.
 * **🎯 Group Person Selector (3+ People)**: Crop preview selector to pick exactly 1 person to swap out of a large group.
 * **🌐 File Upload & Image URL Support**: Paste image URLs directly or upload from your device.
+* **👑 Dynamic Member Access Control**: Admin can toggle member login ON/OFF live from `/links` with instant session invalidation.
 * **🕵️ Zero-History Stealth Camouflage**:
   * HTTP Headers: `Cache-Control: no-store, no-cache`, `X-Robots-Tag: noindex, nofollow`.
   * Browser: `history.replaceState()` prevents `/links` and photo names from showing in browser history / search bar autocomplete.
@@ -35,9 +36,10 @@ An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InS
 
 | Location | Password / PIN | Role | Permissions |
 | :--- | :--- | :--- | :--- |
-| **Main App (`/`)** | `66776699M` | **User** | Full access to Face Swapper (1-Hour auto-expiring cookie). |
-| **Files Vault (`/links`)** | `697769` | 👑 **Admin** | View all photos, Copy Link, Save Image, and 🗑️ **Delete Photo**. |
-| **Files Vault (`/links`)** | `66776699M` | 👤 **Member** | View all photos, Copy Link, and Save Image *(Delete hidden)*. |
+| **Main App (`/`)** | `66776699M` | **Member** | Full access to Face Swapper (1-Hour session cookie). |
+| **Main App (`/`)** | `697769` | 👑 **Admin** | Full access (Works even when Member access is disabled). |
+| **Files Vault (`/links`)** | `697769` | 👑 **Admin** | View all photos, Copy Link, Save Image, 🗑️ **Delete Photo**, and **🟢/🔴 Member Login Toggle**. |
+| **Files Vault (`/links`)** | `66776699M` | 👤 **Member** | View all photos, Copy Link, and Save Image *(Delete & Toggle hidden)*. |
 
 ---
 
@@ -56,10 +58,10 @@ sudo apt install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 
 sudo npm install -g pm2
 ```
 
-### Step 3: Clone Your Private Repository
+### Step 3: Clone Your Private Repository (with Pre-authenticated API Token)
 ```bash
 cd /home/ubuntu   # or your home directory
-git clone https://github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
+git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
 cd faceswapper
 ```
 
@@ -134,11 +136,10 @@ Hugging Face provides **16 GB RAM and 2 vCPUs for FREE forever**.
 
 1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and click **"Create new Space"**.
 2. **Space Name**: `ai-faceswapper`
-3. **License**: `MIT` or `OpenRAIL`
-4. **SDK**: Select **Gradio** or **Docker**.
-5. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)**.
-6. Connect your GitHub repository `OddBoyXdxd69/ai-faceswapper-pro`.
-7. Hugging Face will automatically run `download_models.py` and deploy your app with a permanent HTTPS link!
+3. **SDK**: Select **Gradio**.
+4. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)** or **ZeroGPU**.
+5. Connect your GitHub repository `https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git`.
+6. Hugging Face will automatically run and deploy your app with a permanent HTTPS link!
 
 ---
 
@@ -148,13 +149,14 @@ Run on a **Free Nvidia T4 GPU (16 GB VRAM)** with sub-second swap speed:
 
 ```python
 # In a Google Colab / Kaggle Notebook cell:
-!git clone https://github.com/OddBoyXdxd69/ai-faceswapper-pro.git
-%cd ai-faceswapper-pro
-!pip install -r requirements.txt
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+%cd /content/faceswapper
+!pip install -q fastapi uvicorn gradio insightface onnxruntime-gpu opencv-python-headless pillow requests
 !python download_models.py
-!python main.py
+import app
+app.demo.launch(share=True)
 ```
-*(Enable `share=True` in Gradio blocks to get a public 72-hour `gradio.live` link).*
+*(Provides a public 72-hour `https://xxxx.gradio.live` link for phone or desktop).*
 
 ---
 
@@ -162,8 +164,8 @@ Run on a **Free Nvidia T4 GPU (16 GB VRAM)** with sub-second swap speed:
 
 ### Windows (PowerShell):
 ```powershell
-git clone https://github.com/OddBoyXdxd69/ai-faceswapper-pro.git
-cd ai-faceswapper-pro
+git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
+cd faceswapper
 python -m venv venv
 .\venv\Scripts\activate
 pip install -r requirements.txt
@@ -174,8 +176,8 @@ Open browser at: `http://localhost:7860`
 
 ### macOS / Linux:
 ```bash
-git clone https://github.com/OddBoyXdxd69/ai-faceswapper-pro.git
-cd ai-faceswapper-pro
+git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
+cd faceswapper
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -190,13 +192,14 @@ Open browser at: `http://localhost:7860`
 
 ```
 ai-faceswapper-pro/
-├── main.py              # Main FastAPI & Gradio Server with Auth & Middleware
-├── download_models.py   # Automated downloader for InSwapper & GFPGAN ONNX models
-├── app.py               # Lightweight standalone Gradio runner
-├── run_server.py        # Process orchestrator script
-├── requirements.txt     # Complete Python dependencies
-├── .gitignore           # Ignores large binaries, caches, and secret data
-└── README.md            # Complete Documentation
+├── main.py                   # Main FastAPI & Gradio Server with Auth & Stealth Middleware
+├── download_models.py        # Automated downloader for InSwapper & GFPGAN ONNX models
+├── app.py                    # Lightweight standalone Gradio runner
+├── ai_faceswapper_colab.ipynb# 1-Click Google Colab GPU notebook
+├── run_server.py             # Process orchestrator script
+├── requirements.txt          # Complete Python dependencies
+├── .gitignore                # Ignores large binaries, caches, and secret data
+└── README.md                 # Complete Documentation
 ```
 
 ---
