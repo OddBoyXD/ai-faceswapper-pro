@@ -12,14 +12,13 @@ print("⚡ Initializing Black Forest Labs FLUX Engine on GPU...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else torch.float16
 
-# Load Black Forest Labs FLUX.1 [schnell] for ultra-fast high-fidelity 4-step generation on Colab GPU
-MODEL_ID = "black-forest-labs/FLUX.1-schnell"
+# 100% Public Non-Gated FLUX.1 [schnell] Full Weights Mirror (Zero Login / Zero Token Needed)
+MODEL_ID = "Niansuh/FLUX.1-schnell"
 
 print(f"Loading {MODEL_ID} in {dtype}...")
 pipe = FluxPipeline.from_pretrained(
     MODEL_ID,
-    torch_dtype=dtype,
-    safety_checker=None
+    torch_dtype=dtype
 )
 
 # Enable memory optimizations for Google Colab GPU (Fits within 16GB VRAM smoothly)
