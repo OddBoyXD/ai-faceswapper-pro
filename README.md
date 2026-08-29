@@ -1,6 +1,6 @@
-# ⚡ AI Face Swapper Pro • Complete A-to-Z Guide
+# ⚡ AI Face Swapper Pro & Ultra-Realistic AI Studio • Complete A-to-Z Guide
 
-An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, **InstantID SDXL (1024x1024 Photorealism)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
+An enterprise-grade, high-accuracy AI Face Swapper & Ultra-Realistic Creation Suite powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, **RealVisXL V4.0 (4K Photorealism)**, **InstructPix2Pix (Chatbot Image Editor)**, **InstantID SDXL**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
 
 ---
 
@@ -8,30 +8,28 @@ An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InS
 1. [🌟 Features & Capabilities](#-features--capabilities)
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
 3. [🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-a-to-z-installation-on-any-linux-vps-ubuntu--debian)
-4. [🌟 Option 2: Hollywood-Grade InstantID (SDXL 1024x1024) on Google Colab](#-option-2-hollywood-grade-instantid-sdxl-1024x1024-on-google-colab)
-5. [⚡ Option 3: Fast GPU Swap (InSwapper + GFPGAN) on Google Colab](#-option-3-fast-gpu-swap-inswapper--gfpgan-on-google-colab)
-6. [🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-4-free-gpu-on-kaggle-30h-free-gpu-weekly)
-7. [☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-5-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
-8. [💻 Option 6: Local Setup on Windows / Mac PC](#-option-6-local-setup-on-windows--mac-pc)
-9. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
-10. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
+4. [🎨 Option 2: Ultra-Realistic 4K Generator & Chat Image Editor on Google Colab](#-option-2-ultra-realistic-4k-generator--chat-image-editor-on-google-colab)
+5. [🌟 Option 3: Hollywood-Grade InstantID (SDXL 1024x1024) on Google Colab](#-option-3-hollywood-grade-instantid-sdxl-1024x1024-on-google-colab)
+6. [⚡ Option 4: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab](#-option-4-fast-gpu-face-swap-inswapper--gfpgan-on-google-colab)
+7. [🚀 Option 5: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-5-free-gpu-on-kaggle-30h-free-gpu-weekly)
+8. [☁️ Option 6: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-6-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
+9. [💻 Option 7: Local Setup on Windows / Mac PC](#-option-7-local-setup-on-windows--mac-pc)
+10. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
+11. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
 
 ---
 
 ## 🌟 Features & Capabilities
 
-* **🌟 InstantID SDXL 1024x1024 (Colab GPU Only)**: Native diffusion-based synthesis with real physical light bounces, authentic skin pores, and 10/10 Hollywood photorealism.
+* **🎨 4K Photorealistic Text-to-Image (RealVisXL V4.0 • Colab GPU)**: Authentic skin pores, natural eye reflections, DSLR depth-of-field, studio lighting simulation, and 100% uncensored generation.
+* **💬 Conversational Chat Image Editor (InstructPix2Pix • Colab GPU)**: Upload any photo and simply type your edits in plain English (e.g. *"make him wear a leather jacket"*, *"change hair to blonde"*, *"put on a beach at sunset"*).
+* **🌟 InstantID SDXL 1024x1024 (Colab GPU)**: Native diffusion-based face synthesis with 10/10 Hollywood photorealism.
 * **👤 1:1 Single Face Swap**: Instant sub-second swapping using InSwapper-128 + Ultra HD facial restoration with GFPGAN.
 * **👥 2-Person Custom Swap**: Automatic face detection with thumbnail preview cards, allowing custom mapping of who gets which replacement face.
 * **🎯 Group Person Selector (3+ People)**: Crop preview selector to pick exactly 1 person to swap out of a large group.
-* **🌐 File Upload & Image URL Support**: Paste image URLs directly or upload from your device.
 * **👑 Dynamic Member Access Control**: Admin can toggle member login ON/OFF live from `/links` with instant session invalidation.
-* **🕵️ Zero-History Stealth Camouflage**:
-  * HTTP Headers: `Cache-Control: no-store, no-cache`, `X-Robots-Tag: noindex, nofollow`.
-  * Browser: `history.replaceState()` prevents `/links` and photo names from showing in browser history / search bar autocomplete.
-  * Tab title disguised as `Cloud Storage` / `Cloud Drive • Files`.
+* **🕵️ Zero-History Stealth Camouflage**: Disguised titles (`Cloud Storage`), `Cache-Control: no-store`, and unindexed headers.
 * **📁 Hidden System Vault**: Processed photos auto-saved inside a hidden directory (`~/.sys_vault/data/`).
-* **📱 Mobile-Optimized Vault**: Fullscreen in-page lightbox viewer with silent in-memory (`blob:`) download and one-click AJAX photo deletion.
 
 ---
 
@@ -80,7 +78,6 @@ pip install -r requirements.txt
 ```bash
 python download_models.py
 ```
-*(This downloads `inswapper_128.onnx` and `gfpgan_1.4.onnx` directly into `models/`)*.
 
 ### Step 6: Start 24/7 Background Process with PM2
 ```bash
@@ -123,20 +120,14 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-### Step 8: Setup Free SSL Certificate (HTTPS)
-If using Cloudflare: Set SSL mode to **Flexible** or **Full (Strict)**.  
-If using Certbot (Direct Let's Encrypt):
-```bash
-sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d yourdomain.com
-```
-
 ---
 
-## 🌟 Option 2: Hollywood-Grade InstantID (SDXL 1024x1024) on Google Colab
+## 🎨 Option 2: Ultra-Realistic 4K Generator & Chat Image Editor on Google Colab
 
 > [!TIP]
-> **InstantID (SDXL)** gives **10/10 Photorealism** by generating physical light bounces, skin pores, and studio portraits at native 1024x1024 resolution. Runs on Free Nvidia T4 GPU in ~5 seconds!
+> **Features:**  
+> 1. **4K Photorealistic Generator (RealVisXL V4.0):** Generates lifelike humans, portraits, and scenes with DSLR lighting.  
+> 2. **AI Chat Image Editor (InstructPix2Pix):** Upload any image and tell the AI what to change in conversational chat!
 
 Paste this into a **Google Colab** code cell:
 
@@ -147,18 +138,34 @@ Paste this into a **Google Colab** code cell:
 !git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
-# 2. Install InstantID & SDXL Dependencies
+# 2. Install AI Studio Dependencies
+!pip install -q diffusers transformers accelerate gradio opencv-python-headless pillow invisible-watermark
+
+# 3. Launch Ultra-Realistic AI Studio with Free Share Link
+!python colab_ai_studio.py
+```
+
+---
+
+## 🌟 Option 3: Hollywood-Grade InstantID (SDXL 1024x1024) on Google Colab
+
+```python
+# 1. Step out and clone repository with Token
+%cd /content
+!rm -rf /content/faceswapper
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+%cd /content/faceswapper
+
+# 2. Install InstantID Dependencies
 !pip install -q diffusers transformers accelerate insightface gradio opencv-python-headless pillow requests
 
-# 3. Launch InstantID 4K Web App with Free Share Link
+# 3. Launch InstantID 4K Web App
 !python instantid_colab.py
 ```
 
 ---
 
-## ⚡ Option 3: Fast GPU Swap (InSwapper + GFPGAN) on Google Colab
-
-Paste this into a Google Colab code cell for sub-second classic face swaps:
+## ⚡ Option 4: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab
 
 ```python
 # 1. Step out and clone repository with Token
@@ -173,7 +180,7 @@ Paste this into a Google Colab code cell for sub-second classic face swaps:
 # 3. Download AI Models
 !python download_models.py
 
-# 4. Clear Python memory cache & Launch with Free Share Link
+# 4. Launch with Free Share Link
 import sys
 if 'app' in sys.modules:
     del sys.modules['app']
@@ -183,15 +190,10 @@ app.demo.launch(share=True)
 
 ---
 
-## 🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)
+## 🚀 Option 5: Free GPU on Kaggle (30h Free GPU Weekly)
 
 > [!IMPORTANT]
-> **Before running on Kaggle:**  
-> In the Kaggle notebook right sidebar:  
-> 1. Go to **Settings ➔ Internet** and turn it **ON**.  
-> 2. Go to **Settings ➔ Accelerator** and select **GPU T4 x2** or **GPU P100**.
-
-Paste this code into a Kaggle code cell:
+> In Kaggle sidebar: Turn **Internet ON** and set **Accelerator to GPU T4 x2**.
 
 ```python
 # 1. Clone Private Repository to Kaggle Working Directory
@@ -211,17 +213,17 @@ app.demo.launch(share=True)
 
 ---
 
-## ☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces (16 GB RAM)
+## ☁️ Option 6: 100% Free 24/7 Hosting on Hugging Face Spaces (16 GB RAM)
 
 1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and click **"Create new Space"**.
 2. **Space Name**: `ai-faceswapper`
 3. **SDK**: Select **Gradio**.
-4. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)** or **ZeroGPU**.
+4. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)**.
 5. Connect your GitHub repository `https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git`.
 
 ---
 
-## 💻 Option 6: Local Setup on Windows / Mac PC
+## 💻 Option 7: Local Setup on Windows / Mac PC
 
 ### Windows (PowerShell):
 ```powershell
@@ -254,10 +256,12 @@ Open browser at: `http://localhost:7860`
 ```
 ai-faceswapper-pro/
 ├── main.py                   # Main FastAPI & Gradio Server for Linux VPS (Dual Auth + Stealth)
+├── colab_ai_studio.py        # 4K Photorealistic Generator & Conversational Image Editor Chatbot
+├── ai_generator_colab.ipynb  # 1-Click AI Studio Colab Notebook
 ├── instantid_colab.py        # Hollywood-Grade 1024x1024 InstantID SDXL engine (Google Colab GPU)
 ├── instantid_colab.ipynb     # 1-Click InstantID Colab Notebook
 ├── app.py                    # Fast InSwapper + GFPGAN runner
-├── ai_faceswapper_colab.ipynb# 1-Click Classic Fast Swap Colab Notebook
+├── ai_faceswapper_colab.ipynb# 1-Click Classic Fast Face Swap Colab Notebook
 ├── download_models.py        # Automated downloader for InSwapper & GFPGAN ONNX models
 ├── run_server.py             # Process orchestrator script
 ├── requirements.txt          # Complete Python dependencies
