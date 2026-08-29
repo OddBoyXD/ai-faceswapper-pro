@@ -135,8 +135,10 @@ Paste this into a **Google Colab** code cell:
 !git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
-# 2. Install FLUX.1 Dependencies
-!pip install -q diffusers transformers accelerate gradio sentencepiece protobuf torch torchvision
+# 2. Install FLUX.1 & Fast Transfer Dependencies
+!pip install -q diffusers transformers accelerate gradio sentencepiece protobuf torch torchvision hf_transfer huggingface_hub
+import os
+os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
 
 # 3. Launch FLUX.1 Image Studio with Free Public Live Link
 !python flux_image_generator.py
