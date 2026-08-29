@@ -4,6 +4,7 @@ import io
 import time
 import hmac
 import hashlib
+import json
 import cv2
 import requests
 import numpy as np
@@ -23,6 +24,7 @@ SESSION_DURATION_SECONDS = 3600  # 1 Hour for main face swapper app
 
 MODELS_DIR = '/home/ubuntu/faceswapper/models'
 OUTPUT_DIR = '/home/ubuntu/.sys_vault/data'
+CONFIG_PATH = '/home/ubuntu/.sys_vault/config.json'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 INSWAPPER_PATH = os.path.join(MODELS_DIR, 'inswapper_128.onnx')
@@ -34,11 +36,11 @@ sess_opts.inter_op_num_threads = 2
 sess_opts.execution_mode = ort.ExecutionMode.ORT_PARALLEL
 sess_opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
 
-print("Loading Fast Face Analysis...")
+print("Loading Fast Face Analysis (InsightFace)...")
 app_face = FaceAnalysis(name='buffalo_l', providers=['CPUExecutionProvider'])
 app_face.prepare(ctx_id=-1, det_size=(512, 512))
 
-print("Loading Fast InSwapper...")
+print("Loading Fast InSwapper-128...")
 swapper = insightface.model_zoo.get_model(INSWAPPER_PATH, providers=['CPUExecutionProvider'], session_options=sess_opts)
 
 print("Loading Fast GFPGAN v1.4...")
@@ -52,23 +54,69 @@ FFHQ_512_KPS = np.array([
     [313.0890, 371.1511]
 ], dtype=np.float32)
 
-def create_session_token():
-    ts = str(int(time.time()))
-    sig = hmac.new(SECRET_KEY.encode(), ts.encode(), hashlib.sha256).hexdigest()
-    return f"{ts}:{sig}"
-
-def verify_session_token(token: str, max_age_seconds: int = SESSION_DURATION_SECONDS):
-    if not token or ":" not in token:
-        return False
+# ── CONFIG / MEMBER ACCESS CONTROLLER ──
+def is_member_access_enabled() -> bool:
     try:
-        ts_str, sig = token.split(":", 1)
-        ts = int(ts_str)
-        if time.time() - ts > max_age_seconds:
-            return False
-        expected_sig = hmac.new(SECRET_KEY.encode(), ts_str.encode(), hashlib.sha256).hexdigest()
-        return hmac.compare_digest(sig, expected_sig)
+        if os.path.exists(CONFIG_PATH):
+            with open(CONFIG_PATH, 'r') as f:
+                return json.load(f).get("member_access_enabled", True)
     except Exception:
-        return False
+        pass
+    return True
+
+def set_member_access(enabled: bool):
+    try:
+        cfg = {}
+        if os.path.exists(CONFIG_PATH):
+            try:
+                with open(CONFIG_PATH, 'r') as f:
+                    cfg = json.load(f)
+            except Exception:
+                pass
+        cfg["member_access_enabled"] = enabled
+        with open(CONFIG_PATH, 'w') as f:
+            json.dump(cfg, f)
+    except Exception as e:
+        print("Error saving config:", e)
+
+# ── AUTHENTICATION TOKEN GENERATION & VALIDATION ──
+def create_session_token(role="member") -> str:
+    ts = int(time.time())
+    data = f"{role}:{ts}"
+    sig = hmac.new(SECRET_KEY.encode(), data.encode(), hashlib.sha256).hexdigest()
+    return f"{role}:{ts}:{sig}"
+
+def verify_session_token(token: str, max_age_seconds=SESSION_DURATION_SECONDS):
+    if not token:
+        return False, ""
+    try:
+        parts = token.split(":")
+        if len(parts) == 3:
+            role, ts_str, sig = parts
+            ts = int(ts_str)
+            if time.time() - ts > max_age_seconds:
+                return False, ""
+            expected_sig = hmac.new(SECRET_KEY.encode(), f"{role}:{ts_str}".encode(), hashlib.sha256).hexdigest()
+            if not hmac.compare_digest(sig, expected_sig):
+                return False, ""
+            # If member access is disabled and user role is "member", reject session immediately
+            if role == "member" and not is_member_access_enabled():
+                return False, "member_disabled"
+            return True, role
+        elif len(parts) == 2:
+            ts_str, sig = parts
+            ts = int(ts_str)
+            if time.time() - ts > max_age_seconds:
+                return False, ""
+            expected_sig = hmac.new(SECRET_KEY.encode(), ts_str.encode(), hashlib.sha256).hexdigest()
+            if not hmac.compare_digest(sig, expected_sig):
+                return False, ""
+            if not is_member_access_enabled():
+                return False, "member_disabled"
+            return True, "member"
+    except Exception:
+        return False, ""
+    return False, ""
 
 def render_login_page(action_url="/login", redirect_url="/", error_msg="", title="Security Verification", subtitle="Please enter access PIN to continue"):
     return f"""<!DOCTYPE html>
@@ -94,38 +142,31 @@ def render_login_page(action_url="/login", redirect_url="/", error_msg="", title
         input[type="password"]:focus {{ border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56,189,248,0.2); }}
         .btn {{ width: 100%; padding: 13px; background: #2563eb; color: #fff; font-size: 1rem; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s, background 0.2s; }}
         .btn:hover {{ background: #1d4ed8; transform: translateY(-2px); }}
-        .error-alert {{ background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; }}
-        .info-tag {{ margin-top: 20px; font-size: 0.75rem; color: #64748b; }}
+        .error-alert {{ background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; line-height: 1.4; }}
     </style>
 </head>
 <body>
     <div class="login-card">
-        <div class="logo-icon">☁️</div>
+        <div class="logo-icon">🔒</div>
         <h1>{title}</h1>
         <p>{subtitle}</p>
         
-        {f'<div class="error-alert">❌ {error_msg}</div>' if error_msg else ''}
+        {f'<div class="error-alert">{error_msg}</div>' if error_msg else ''}
         
         <form method="POST" action="{action_url}">
             <input type="hidden" name="redirect_url" value="{redirect_url}">
             <div class="input-group">
-                <label for="password">Security PIN / Password</label>
-                <input type="password" id="password" name="password" placeholder="••••••••••••" autofocus required>
+                <label for="password">Enter Access Code / PIN</label>
+                <input type="password" id="password" name="password" required autofocus placeholder="••••••••">
             </div>
-            <button type="submit" class="btn">Continue</button>
+            <button type="submit" class="btn">Authenticate & Access</button>
         </form>
-        <div class="info-tag">🔒 End-to-End Encrypted Session</div>
     </div>
-    <script>
-        if (window.history && window.history.replaceState) {{
-            window.history.replaceState(null, document.title, window.location.href);
-        }}
-    </script>
 </body>
 </html>
 """
 
-def render_links_content(password_used, is_admin=False):
+def render_links_content(password_used, is_admin=False, member_enabled=True):
     files = []
     if os.path.exists(OUTPUT_DIR):
         for f in os.listdir(OUTPUT_DIR):
@@ -167,6 +208,15 @@ def render_links_content(password_used, is_admin=False):
         """
 
     role_badge = '<span class="admin-badge">👑 Admin Mode</span>' if is_admin else '<span class="user-badge">👤 Member Mode</span>'
+    
+    # Admin-only Member Login Toggle Button
+    if is_admin:
+        if member_enabled:
+            member_toggle_html = '<button class="toggle-btn toggle-enabled" id="member-toggle-btn" onclick="toggleMemberAccess(false)">🟢 Member Login: ENABLED</button>'
+        else:
+            member_toggle_html = '<button class="toggle-btn toggle-disabled" id="member-toggle-btn" onclick="toggleMemberAccess(true)">🔴 Member Login: DISABLED (Admin Only)</button>'
+    else:
+        member_toggle_html = ''
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -184,12 +234,18 @@ def render_links_content(password_used, is_admin=False):
         .header {{ text-align: center; max-width: 900px; margin: 0 auto 20px auto; padding-bottom: 15px; border-bottom: 1px solid #1e293b; }}
         h1 {{ font-size: 1.5rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px; }}
         .subtitle {{ color: #94a3b8; font-size: 0.88rem; margin-bottom: 12px; }}
-        .top-nav {{ display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }}
+        .top-nav {{ display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }}
         .nav-btn {{ background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px 14px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.85rem; transition: 0.2s; }}
         .nav-btn:hover {{ background: #38bdf8; color: #000; }}
         .stats-badge {{ background: #1e293b; color: #cbd5e1; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; border: 1px solid #334155; }}
         .admin-badge {{ background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; }}
         .user-badge {{ background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; }}
+        
+        .toggle-btn {{ padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }}
+        .toggle-enabled {{ background: rgba(34, 197, 94, 0.2); color: #4ade80; border-color: #22c55e; }}
+        .toggle-enabled:hover {{ background: rgba(34, 197, 94, 0.35); transform: translateY(-1px); }}
+        .toggle-disabled {{ background: rgba(239, 68, 68, 0.25); color: #fca5a5; border-color: #ef4444; }}
+        .toggle-disabled:hover {{ background: rgba(239, 68, 68, 0.4); transform: translateY(-1px); }}
         
         .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; max-width: 1400px; margin: 0 auto; }}
         .card {{ background: #131b2e; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, opacity 0.3s; }}
@@ -232,6 +288,7 @@ def render_links_content(password_used, is_admin=False):
         <div class="top-nav">
             <span class="stats-badge" id="photo-count">📦 Total Files: {len(files)}</span>
             {role_badge}
+            {member_toggle_html}
             <a href="/" class="nav-btn">⚡ Dashboard</a>
             <a href="/links" class="nav-btn">🔒 Re-lock</a>
         </div>
@@ -258,6 +315,43 @@ def render_links_content(password_used, is_admin=False):
 
         if (window.history && window.history.replaceState) {{
             window.history.replaceState(null, document.title, window.location.pathname);
+        }}
+
+        function toggleMemberAccess(targetState) {{
+            const btn = document.getElementById('member-toggle-btn');
+            if (!btn) return;
+            btn.disabled = true;
+            btn.innerText = '⏳ Updating...';
+            
+            const formData = new FormData();
+            formData.append('password', AUTH_PASS);
+            formData.append('enabled', targetState ? 'true' : 'false');
+            
+            fetch('/toggle_member_access', {{
+                method: 'POST',
+                body: formData
+            }})
+            .then(r => r.json())
+            .then(data => {{
+                btn.disabled = false;
+                if (data.success) {{
+                    if (data.member_access_enabled) {{
+                        btn.className = 'toggle-btn toggle-enabled';
+                        btn.innerText = '🟢 Member Login: ENABLED';
+                        btn.onclick = () => toggleMemberAccess(false);
+                    }} else {{
+                        btn.className = 'toggle-btn toggle-disabled';
+                        btn.innerText = '🔴 Member Login: DISABLED (Admin Only)';
+                        btn.onclick = () => toggleMemberAccess(true);
+                    }}
+                }} else {{
+                    alert(data.error || 'Failed to update member access.');
+                }}
+            }})
+            .catch(err => {{
+                btn.disabled = false;
+                alert('Network error updating member access.');
+            }});
         }}
 
         function openLightbox(imgUrl, fname) {{
@@ -311,46 +405,62 @@ def render_links_content(password_used, is_admin=False):
         function copyLink(inputId, btn) {{
             const input = document.getElementById(inputId);
             input.select();
+            input.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(input.value).then(() => {{
-                const orig = btn.innerText;
-                btn.innerText = "✅ Done";
-                btn.style.background = "#10b981";
+                const originalText = btn.innerText;
+                btn.innerText = '✅ Copied!';
+                btn.style.background = '#10b981';
                 setTimeout(() => {{
-                    btn.innerText = orig;
-                    btn.style.background = "#2563eb";
+                    btn.innerText = originalText;
+                    btn.style.background = '#2563eb';
                 }}, 1500);
-            }}).catch(err => {{
+            }}).catch(() => {{
                 document.execCommand('copy');
-                btn.innerText = "✅ Done";
+                btn.innerText = '✅ Copied!';
+                setTimeout(() => {{ btn.innerText = '📋 Copy'; }}, 1500);
             }});
         }}
 
-        function deletePhoto(filename, cardId) {{
-            if (!confirm("⚠️ Are you sure you want to permanently delete this photo?")) return;
-            
-            fetch("/delete_photo", {{
-                method: "POST",
-                headers: {{ "Content-Type": "application/x-www-form-urlencoded" }},
-                body: new URLSearchParams({{ filename: filename, password: AUTH_PASS }})
+        function deletePhoto(fname, cardId) {{
+            if (!confirm('Are you sure you want to permanently delete this photo?')) {{
+                return;
+            }}
+            const card = document.getElementById(cardId);
+            if (card) card.style.opacity = '0.4';
+
+            const formData = new FormData();
+            formData.append('filename', fname);
+            formData.append('password', AUTH_PASS);
+
+            fetch('/delete_photo', {{
+                method: 'POST',
+                body: formData
             }})
             .then(res => res.json())
             .then(data => {{
-                if (data.status === "deleted") {{
-                    const card = document.getElementById(cardId);
+                if (data.status === 'deleted') {{
                     if (card) {{
-                        card.style.opacity = "0";
-                        card.style.transform = "scale(0.85)";
+                        card.style.transform = 'scale(0.8)';
+                        card.style.opacity = '0';
                         setTimeout(() => {{
                             card.remove();
                             const remaining = document.querySelectorAll('.card').length;
-                            document.getElementById('photo-count').innerText = `📦 Total Files: ${{remaining}}`;
-                        }}, 250);
+                            const countEl = document.getElementById('photo-count');
+                            if (countEl) countEl.innerText = '📦 Total Files: ' + remaining;
+                            if (remaining === 0) {{
+                                document.getElementById('gallery-grid').innerHTML = '<p style="text-align:center; grid-column: 1/-1; color:#94a3b8; font-size:1.1rem; padding: 40px;">No stored files found.</p>';
+                            }}
+                        }}, 300);
                     }}
                 }} else {{
-                    alert("Delete failed: " + (data.error || "Unauthorized"));
+                    alert('Error: ' + (data.error || 'Failed to delete photo'));
+                    if (card) card.style.opacity = '1';
                 }}
             }})
-            .catch(err => alert("Error: " + err));
+            .catch(err => {{
+                alert('Network error while deleting photo.');
+                if (card) card.style.opacity = '1';
+            }});
         }}
     </script>
 </body>
@@ -647,11 +757,11 @@ def swap_specific_person(source_img=None, source_url="", target_img=None, target
     return result_rgb, f"✅ Successfully replaced {selected_person} in the group photo!"
 
 # ── GRADIO UI ──
-with gr.Blocks(title="Cloud Storage") as demo:
+with gr.Blocks(title="AI Face Swapper Pro") as demo:
     gr.HTML("""
     <div style="text-align: center; margin-bottom: 20px;">
         <h1 style="background: linear-gradient(90deg, #00e5ff, #8a2be2, #ff007f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.3rem; font-weight: 800; margin: 0;">⚡ AI FACE SWAPPER PRO</h1>
-        <p style="color: #94a3b8; font-size: 1rem; margin-top: 5px;">Visual Person Selector & Multi-Face Swap • 1:1 Pixel Accuracy • Photos & URLs • 100% Free</p>
+        <p style="color: #94a3b8; font-size: 1rem; margin-top: 5px;">Visual Person Selector & Multi-Face Swap • 1:1 Pixel Accuracy • Photos & URLs • 100% Private</p>
     </div>
     """)
     
@@ -777,8 +887,8 @@ class GlobalAuthMiddleware(BaseHTTPMiddleware):
         if "runs" in path or path.startswith(("/gradio_api/runs", "/runs")):
             return JSONResponse({"error": "Not Found", "message": "History and run tracking are permanently disabled."}, status_code=404)
             
-        # 2. Allow login routes, delete endpoint, and robots.txt
-        if path in ["/login", "/delete_photo", "/favicon.ico", "/robots.txt"]:
+        # 2. Allow login routes, toggle routes, delete endpoint, and robots.txt
+        if path in ["/login", "/toggle_member_access", "/delete_photo", "/favicon.ico", "/robots.txt"]:
             resp = await call_next(request)
             resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
             resp.headers["Pragma"] = "no-cache"
@@ -805,7 +915,8 @@ class GlobalAuthMiddleware(BaseHTTPMiddleware):
         # 4. Special rule for /photos/*: Protected access
         if path.startswith("/photos/"):
             auth_cookie = request.cookies.get("auth_session")
-            if not auth_cookie or not verify_session_token(auth_cookie):
+            is_valid, _ = verify_session_token(auth_cookie)
+            if not auth_cookie or not is_valid:
                 resp = HTMLResponse(render_login_page(action_url="/login", redirect_url=path, title="Security Verification", subtitle="Please enter access PIN to continue"), status_code=401)
                 resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
                 resp.headers["Pragma"] = "no-cache"
@@ -821,13 +932,15 @@ class GlobalAuthMiddleware(BaseHTTPMiddleware):
             
         # 5. Check 1-Hour Session Cookie for main Face Swapper app (/)
         auth_cookie = request.cookies.get("auth_session")
-        if auth_cookie and verify_session_token(auth_cookie):
-            resp = await call_next(request)
-            resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-            resp.headers["Pragma"] = "no-cache"
-            resp.headers["Expires"] = "0"
-            resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
-            return resp
+        if auth_cookie:
+            is_valid, _ = verify_session_token(auth_cookie)
+            if is_valid:
+                resp = await call_next(request)
+                resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+                resp.headers["Pragma"] = "no-cache"
+                resp.headers["Expires"] = "0"
+                resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+                return resp
             
         # 6. Block unauthenticated Gradio API / queue / WebSocket calls
         if path.startswith(("/gradio_api/", "/queue/", "/assets/")):
@@ -849,12 +962,16 @@ def robots_txt():
 
 @app.post("/login")
 async def process_login(request: Request, password: str = Form(""), redirect_url: str = Form("/")):
-    if password.strip() == APP_PASSWORD:
+    pwd = password.strip()
+    member_enabled = is_member_access_enabled()
+    
+    # 1. Admin PIN always works (both when member access is ON or OFF)
+    if pwd == LINKS_PASSWORD:
         target = redirect_url if redirect_url and redirect_url.startswith("/") and redirect_url != "/links" else "/"
         resp = RedirectResponse(target, status_code=303)
         resp.set_cookie(
             key="auth_session",
-            value=create_session_token(),
+            value=create_session_token(role="admin"),
             max_age=SESSION_DURATION_SECONDS,
             httponly=True,
             samesite="lax",
@@ -865,6 +982,32 @@ async def process_login(request: Request, password: str = Form(""), redirect_url
         resp.headers["Expires"] = "0"
         resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
         return resp
+        
+    # 2. Member Password
+    elif pwd == APP_PASSWORD:
+        if not member_enabled:
+            resp = HTMLResponse(render_login_page(action_url="/login", redirect_url=redirect_url, error_msg="🔒 Member access is currently disabled by Administrator. Only Admin can log in."), status_code=403)
+            resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+            resp.headers["Pragma"] = "no-cache"
+            resp.headers["Expires"] = "0"
+            resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+            return resp
+        else:
+            target = redirect_url if redirect_url and redirect_url.startswith("/") and redirect_url != "/links" else "/"
+            resp = RedirectResponse(target, status_code=303)
+            resp.set_cookie(
+                key="auth_session",
+                value=create_session_token(role="member"),
+                max_age=SESSION_DURATION_SECONDS,
+                httponly=True,
+                samesite="lax",
+                path="/"
+            )
+            resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+            resp.headers["Pragma"] = "no-cache"
+            resp.headers["Expires"] = "0"
+            resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+            return resp
     else:
         resp = HTMLResponse(render_login_page(action_url="/login", redirect_url=redirect_url, error_msg="Incorrect PIN. Please try again."), status_code=403)
         resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
@@ -873,26 +1016,36 @@ async def process_login(request: Request, password: str = Form(""), redirect_url
         resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
         return resp
 
-# ── /links: SUPPORTS BOTH 66776699M AND 697769 (697769 IS ADMIN WITH DELETE) ──
-@app.post("/links", response_class=HTMLResponse)
+# ── SECRET FILES TAB (/links) ──
+@app.post("/links")
 def view_links_with_password(password: str = Form("")):
     pwd = password.strip()
+    member_enabled = is_member_access_enabled()
+    
     if pwd == LINKS_PASSWORD:
-        # Admin Mode: full access with Delete button
-        resp = HTMLResponse(render_links_content(pwd, is_admin=True))
+        # Admin Mode: full access with Delete button + Member Toggle Switch
+        resp = HTMLResponse(render_links_content(pwd, is_admin=True, member_enabled=member_enabled))
         resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         resp.headers["Pragma"] = "no-cache"
         resp.headers["Expires"] = "0"
         resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
         return resp
     elif pwd == APP_PASSWORD:
-        # Member Mode: access to view, copy, save
-        resp = HTMLResponse(render_links_content(pwd, is_admin=False))
-        resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-        resp.headers["Pragma"] = "no-cache"
-        resp.headers["Expires"] = "0"
-        resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
-        return resp
+        if not member_enabled:
+            resp = HTMLResponse(render_login_page(action_url="/links", error_msg="🔒 Member access to files is currently disabled by Administrator.", title="Cloud Drive • Files", subtitle="Please enter file manager PIN to continue"), status_code=403)
+            resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+            resp.headers["Pragma"] = "no-cache"
+            resp.headers["Expires"] = "0"
+            resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+            return resp
+        else:
+            # Member Mode: access to view, copy, save
+            resp = HTMLResponse(render_links_content(pwd, is_admin=False, member_enabled=member_enabled))
+            resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+            resp.headers["Pragma"] = "no-cache"
+            resp.headers["Expires"] = "0"
+            resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+            return resp
         
     resp = HTMLResponse(render_login_page(action_url="/links", error_msg="Incorrect PIN for Files tab. Please try again.", title="Cloud Drive • Files", subtitle="Please enter file manager PIN to continue"), status_code=403)
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
@@ -900,6 +1053,20 @@ def view_links_with_password(password: str = Form("")):
     resp.headers["Expires"] = "0"
     resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
     return resp
+
+# ── TOGGLE MEMBER ACCESS ENDPOINT (ADMIN ONLY) ──
+@app.post("/toggle_member_access")
+async def toggle_member_access_endpoint(password: str = Form(""), enabled: str = Form("true")):
+    if password.strip() != LINKS_PASSWORD:
+        return JSONResponse({"success": False, "error": "Admin PIN required."}, status_code=403)
+        
+    is_enabled = enabled.lower() in ["true", "1", "yes"]
+    set_member_access(is_enabled)
+    return JSONResponse({
+        "success": True,
+        "member_access_enabled": is_enabled,
+        "message": f"Member access {'ENABLED' if is_enabled else 'DISABLED'} successfully."
+    })
 
 # ── DELETE PHOTO ENDPOINT (AUTHENTICATED) ──
 @app.post("/delete_photo")
