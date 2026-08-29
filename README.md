@@ -9,10 +9,11 @@ An enterprise-grade, high-accuracy AI Face Swapper powered by **InsightFace (InS
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
 3. [🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-a-to-z-installation-on-any-linux-vps-ubuntu--debian)
 4. [☁️ Option 2: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-2-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
-5. [🚀 Option 3: Free GPU Execution on Google Colab / Kaggle](#-option-3-free-gpu-execution-on-google-colab--kaggle)
-6. [💻 Option 4: Local Setup on Windows / Mac PC](#-option-4-local-setup-on-windows--mac-pc)
-7. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
-8. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
+5. [🚀 Option 3: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-3-free-gpu-on-kaggle-30h-free-gpu-weekly)
+6. [⚡ Option 4: Free GPU on Google Colab (Nvidia T4 GPU)](#-option-4-free-gpu-on-google-colab-nvidia-t4-gpu)
+7. [💻 Option 5: Local Setup on Windows / Mac PC](#-option-5-local-setup-on-windows--mac-pc)
+8. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
+9. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
 
 ---
 
@@ -143,24 +144,58 @@ Hugging Face provides **16 GB RAM and 2 vCPUs for FREE forever**.
 
 ---
 
-## 🚀 Option 3: Free GPU Execution on Google Colab / Kaggle
+## 🚀 Option 3: Free GPU on Kaggle (30h Free GPU Weekly)
 
-Run on a **Free Nvidia T4 GPU (16 GB VRAM)** with sub-second swap speed:
+> [!IMPORTANT]
+> **Before running on Kaggle:**  
+> In the Kaggle notebook right sidebar:  
+> 1. Go to **Settings ➔ Internet** and turn it **ON** (Required to download models & libraries).  
+> 2. Go to **Settings ➔ Accelerator** and select **GPU T4 x2** or **GPU P100**.
+
+Paste this code into a Kaggle code cell:
 
 ```python
-# In a Google Colab / Kaggle Notebook cell:
-!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
-%cd /content/faceswapper
+# 1. Clone Private Repository to Kaggle Working Directory
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /kaggle/working/faceswapper
+%cd /kaggle/working/faceswapper
+
+# 2. Install Dependencies
 !pip install -q fastapi uvicorn gradio insightface onnxruntime-gpu opencv-python-headless pillow requests
+
+# 3. Download AI Models
 !python download_models.py
+
+# 4. Launch with Free Public Gradio Share Link
 import app
 app.demo.launch(share=True)
 ```
-*(Provides a public 72-hour `https://xxxx.gradio.live` link for phone or desktop).*
+*(Gradio outputs a public `https://xxxx.gradio.live` link that you can open on your phone or desktop)*.
 
 ---
 
-## 💻 Option 4: Local Setup on Windows / Mac PC
+## ⚡ Option 4: Free GPU on Google Colab (Nvidia T4 GPU)
+
+Paste this into a Google Colab notebook cell:
+
+```python
+# 1. Clone Private Repository to Colab Content Directory
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+%cd /content/faceswapper
+
+# 2. Install Dependencies
+!pip install -q fastapi uvicorn gradio insightface onnxruntime-gpu opencv-python-headless pillow requests
+
+# 3. Download AI Models
+!python download_models.py
+
+# 4. Launch with Free Public Gradio Share Link
+import app
+app.demo.launch(share=True)
+```
+
+---
+
+## 💻 Option 5: Local Setup on Windows / Mac PC
 
 ### Windows (PowerShell):
 ```powershell
