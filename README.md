@@ -7,7 +7,7 @@ An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Creation Suite p
 ## 📋 Table of Contents
 1. [🌟 Features & Capabilities](#-features--capabilities)
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
-3. [🖥️ Option 1: Full 1-Click Setup on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-1-click-setup-on-any-linux-vps-ubuntu--debian)
+3. [🖥️ Option 1: 1-Click One-Line Setup on Ubuntu VPS (20.04 / 22.04 / 24.04)](#️-option-1-1-click-one-line-setup-on-ubuntu-vps-2004--2204--2404)
 4. [🎨 Option 2: Uncensored SDXL Studio (Image-to-Image & 4K Generator) on Google Colab](#-option-2-uncensored-sdxl-studio-image-to-image--4k-generator-on-google-colab)
 5. [🌟 Option 3: FLUX.1 [dev] Max Version (Flagship 12B Flow Transformer) on Google Colab](#-option-3-flux1-dev-max-version-flagship-12b-flow-transformer-on-google-colab)
 6. [⚡ Option 4: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab](#-option-4-fast-gpu-face-swap-inswapper--gfpgan-on-google-colab)
@@ -45,54 +45,24 @@ An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Creation Suite p
 
 ---
 
-## 🖥️ Option 1: Full 1-Click Setup on Any Linux VPS (Ubuntu / Debian)
+## 🖥️ Option 1: 1-Click One-Line Setup on Ubuntu VPS (20.04 / 22.04 / 24.04)
 
-### 🚀 **Option 1A: The Single 1-Line Command (Full Auto Setup)**
-Copy and paste this single command into your fresh VPS terminal. It updates the server, installs dependencies, clones your private repository, downloads AI models, and starts the 24/7 PM2 production server automatically:
+### 🚀 **Option 1A: The Single 1-Line Command for Ubuntu VPS**
+Copy and paste this **single line** into your Ubuntu terminal. It automatically updates packages, installs PM2, clones your private repository, downloads AI models, and launches the 24/7 background server on port `7860`:
 
 ```bash
-sudo apt update -y && sudo apt install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw && sudo npm install -g pm2 && cd ~ && rm -rf faceswapper && git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper && cd faceswapper && python3 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && python download_models.py && pm2 delete faceswapper 2>/dev/null || true && pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper && pm2 save
+export DEBIAN_FRONTEND=noninteractive && sudo apt-get update -y && sudo apt-get install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw && sudo npm install -g pm2 && cd /home/ubuntu || cd ~ && rm -rf faceswapper && git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper && cd faceswapper && python3 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && python download_models.py && pm2 delete faceswapper 2>/dev/null || true && pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper && pm2 save
 ```
 
 ---
 
-### 🛠️ **Option 1B: Step-by-Step Manual Setup (If Preferred)**
+### 🌐 **Option 1B: Configure Nginx Domain & SSL (Port 80 / 443)**
+To link your domain (e.g. `ph.invmc.in`) to the app:
 
-#### Step 1: Update System & Install Dependencies
-```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw
-sudo npm install -g pm2
-```
-
-#### Step 2: Clone Private Repository
-```bash
-cd ~
-git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
-cd faceswapper
-```
-
-#### Step 3: Set Up Python Virtual Environment & Install Packages
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-python download_models.py
-```
-
-#### Step 4: Start 24/7 PM2 Server
-```bash
-pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper
-pm2 save
-pm2 startup
-```
-
-#### Step 5: Configure Nginx Reverse Proxy (Domain / Port 80 & 443)
 ```bash
 sudo nano /etc/nginx/sites-available/faceswapper
 ```
-Paste configuration (replace `yourdomain.com` with your actual domain):
+Paste configuration:
 ```nginx
 server {
     listen 80;
