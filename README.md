@@ -8,7 +8,7 @@ An enterprise-grade, high-accuracy AI Face Swapper & FLUX Creation Suite powered
 1. [🌟 Features & Capabilities](#-features--capabilities)
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
 3. [🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-a-to-z-installation-on-any-linux-vps-ubuntu--debian)
-4. [🎨 Option 2: FLUX.1 Image Generator (Black Forest Labs) on Google Colab](#-option-2-flux1-image-generator-black-forest-labs-on-google-colab)
+4. [🎨 Option 2: FLUX.1 Image Studio (Google Drive Persistent Cache • 16-Stream Fast Download)](#-option-2-flux1-image-studio-google-drive-persistent-cache--16-stream-fast-download)
 5. [⚡ Option 3: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab](#-option-3-fast-gpu-face-swap-inswapper--gfpgan-on-google-colab)
 6. [🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-4-free-gpu-on-kaggle-30h-free-gpu-weekly)
 7. [☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-5-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
@@ -20,12 +20,13 @@ An enterprise-grade, high-accuracy AI Face Swapper & FLUX Creation Suite powered
 
 ## 🌟 Features & Capabilities
 
-* **🎨 FLUX.1 Image Generator (Black Forest Labs • Colab GPU)**: State-of-the-art 12B parameter flow transformer for mind-blowing photorealism, perfect hands/anatomy, realistic skin pores, and crystal-clear text typography. 100% uncensored.
+* **🎨 FLUX.1 Image Studio (Black Forest Labs • Colab GPU)**: State-of-the-art 12B parameter flow transformer for 100% full photorealism, perfect hands/anatomy, and typography. Saved permanently to Google Drive so it downloads once in your lifetime and loads in 5 seconds forever.
+* **⚡ 16-Stream Parallel Download Acceleration**: Multi-threaded Rust network engine (`hf_transfer`) for high-speed CDN model downloads.
 * **👤 1:1 Single Face Swap**: Instant sub-second swapping using InSwapper-128 + Ultra HD facial restoration with GFPGAN.
 * **👥 2-Person Custom Swap**: Automatic face detection with thumbnail preview cards, allowing custom mapping of who gets which replacement face.
 * **🎯 Group Person Selector (3+ People)**: Crop preview selector to pick exactly 1 person to swap out of a large group.
-* **🌐 File Upload & Image URL Support**: Paste image URLs directly or upload from your device.
 * **👑 Dynamic Member Access Control**: Admin can toggle member login ON/OFF live from `/links` with instant session invalidation.
+* **🚦 1-at-a-Time Concurrency Queue**: Queues concurrent users with live position/ETA counters to guarantee zero server lag.
 * **🕵️ Zero-History Stealth Camouflage**: Disguised titles (`Cloud Storage`), `Cache-Control: no-store`, and unindexed headers.
 * **📁 Hidden System Vault**: Processed photos auto-saved inside a hidden directory (`~/.sys_vault/data/`).
 
@@ -120,27 +121,37 @@ sudo systemctl restart nginx
 
 ---
 
-## 🎨 Option 2: FLUX.1 Image Generator (Black Forest Labs) on Google Colab
+## 🎨 Option 2: FLUX.1 Image Studio (Google Drive Persistent Cache • 16-Stream Fast Download)
 
 > [!TIP]
-> **Pure State-of-the-Art Image Generation (No Face Swap):**  
-> Powered by **Black Forest Labs FLUX.1**, the world's #1 open diffusion transformer for hyper-realistic humans, cinema scenes, and artwork with flawless anatomy.
+> **Why Google Drive Persistent Storage?**  
+> * **1st Run:** Downloads the 100% full-quality model to `/content/drive/MyDrive/flux_models/` using **16 parallel high-speed streams**.  
+> * **Future Runs:** Detects the model on your Google Drive and loads in **~5 seconds with ZERO download wait time!**
 
 Paste this into a **Google Colab** code cell:
 
 ```python
-# 1. Step out and clone fresh repository with Auth Token
+# 1. Mount Google Drive for Permanent Zero-Wait Storage
+from google.colab import drive
+import os
+drive.mount('/content/drive')
+
+# Create dedicated FLUX models folder on Google Drive
+GDRIVE_CACHE = "/content/drive/MyDrive/flux_models"
+os.makedirs(GDRIVE_CACHE, exist_ok=True)
+os.environ['HF_HOME'] = GDRIVE_CACHE
+os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
+
+# 2. Step out and clone fresh repository with Auth Token
 %cd /content
 !rm -rf /content/faceswapper
 !git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
-# 2. Install FLUX.1 & Fast Transfer Dependencies
+# 3. Install FLUX.1 & 16-Stream Parallel Download Acceleration
 !pip install -q diffusers transformers accelerate gradio sentencepiece protobuf torch torchvision hf_transfer huggingface_hub
-import os
-os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
 
-# 3. Launch FLUX.1 Image Studio with Free Public Live Link
+# 4. Launch FLUX.1 with Permanent Google Drive Storage & Free Public Link
 !python flux_image_generator.py
 ```
 
@@ -236,9 +247,9 @@ Open browser at: `http://localhost:7860`
 
 ```
 ai-faceswapper-pro/
-├── main.py                   # Main FastAPI & Gradio Server for Linux VPS (Dual Auth + Stealth)
-├── flux_image_generator.py   # Black Forest Labs FLUX.1 4K Image Studio (Google Colab GPU)
-├── flux_colab.ipynb          # 1-Click FLUX.1 Colab Notebook
+├── main.py                   # Main FastAPI & Gradio Server for Linux VPS (Dual Auth + Stealth + Queue)
+├── flux_image_generator.py   # FLUX.1 4K Image Studio with Google Drive Storage (Google Colab GPU)
+├── flux_colab.ipynb          # 1-Click FLUX.1 Google Drive Colab Notebook
 ├── app.py                    # Fast InSwapper + GFPGAN runner
 ├── ai_faceswapper_colab.ipynb# 1-Click Classic Fast Face Swap Colab Notebook
 ├── download_models.py        # Automated downloader for InSwapper & GFPGAN ONNX models

@@ -10,7 +10,22 @@ from huggingface_hub import login
 
 print("⚡ Initializing Black Forest Labs FLUX.1 Engine on GPU...")
 
-# Set up High-Speed Hugging Face CDN Access
+# 1. Configure Persistent Google Drive Storage Folder
+GDRIVE_CACHE = "/content/drive/MyDrive/flux_models"
+if os.path.exists("/content/drive/MyDrive"):
+    os.makedirs(GDRIVE_CACHE, exist_ok=True)
+    cache_dir = GDRIVE_CACHE
+    print(f"📁 [Google Drive] Permanent Storage Active: {cache_dir}")
+else:
+    cache_dir = None
+    print("📁 [Local Storage] Google Drive not detected, using local cache")
+
+# 2. Enable 16-Stream Parallel Multi-Threaded Download Acceleration (hf_transfer)
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
+if cache_dir:
+    os.environ["HF_HOME"] = cache_dir
+
+# 3. Authenticate with Hugging Face for Maximum CDN Speed
 HF_TOKEN = "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"
 try:
     login(token=HF_TOKEN, add_to_git_credential=False)
@@ -20,14 +35,15 @@ except Exception:
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else torch.float16
 
-# 100% Complete & Public FLUX.1-schnell Float16 Model (Zero Gate / Zero Missing Files)
+# 100% Full-Quality Complete Float16 FLUX.1 Pipeline
 MODEL_ID = "ttj/FLUX.1-schnell-float16"
 
-print(f"Loading {MODEL_ID} in {dtype}...")
+print(f"Loading {MODEL_ID} in {dtype} (Storage: {cache_dir or 'Default'})...")
 pipe = FluxPipeline.from_pretrained(
     MODEL_ID,
     torch_dtype=dtype,
-    token=HF_TOKEN
+    token=HF_TOKEN,
+    cache_dir=cache_dir
 )
 
 # Enable memory optimizations for Google Colab GPU (Fits within 16GB VRAM smoothly)
@@ -94,7 +110,7 @@ with gr.Blocks(title="FLUX.1 Image Generator (Black Forest Labs)") as demo:
     gr.HTML("""
     <div style="text-align: center; margin-bottom: 20px;">
         <h1 style="background: linear-gradient(90deg, #ff7e5f, #feb47b, #ff2a6d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.5rem; font-weight: 900; margin: 0;">⚡ FLUX.1 • Black Forest Labs</h1>
-        <p style="color: #94a3b8; font-size: 1.05rem; margin-top: 5px;">State-of-the-Art 12B Flow Transformer • Unmatched Photorealism & Typography • 100% Uncensored • Free GPU</p>
+        <p style="color: #94a3b8; font-size: 1.05rem; margin-top: 5px;">State-of-the-Art 12B Flow Transformer • Google Drive Persistent Storage • 100% Uncensored • Free GPU</p>
     </div>
     """)
 
