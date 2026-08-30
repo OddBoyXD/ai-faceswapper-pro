@@ -7,7 +7,7 @@ An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Creation Suite p
 ## 📋 Table of Contents
 1. [🌟 Features & Capabilities](#-features--capabilities)
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
-3. [🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-a-to-z-installation-on-any-linux-vps-ubuntu--debian)
+3. [🖥️ Option 1: Full 1-Click Setup on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-1-click-setup-on-any-linux-vps-ubuntu--debian)
 4. [🎨 Option 2: Uncensored SDXL Studio (Image-to-Image & 4K Generator) on Google Colab](#-option-2-uncensored-sdxl-studio-image-to-image--4k-generator-on-google-colab)
 5. [🌟 Option 3: FLUX.1 [dev] Max Version (Flagship 12B Flow Transformer) on Google Colab](#-option-3-flux1-dev-max-version-flagship-12b-flow-transformer-on-google-colab)
 6. [⚡ Option 4: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab](#-option-4-fast-gpu-face-swap-inswapper--gfpgan-on-google-colab)
@@ -45,54 +45,54 @@ An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Creation Suite p
 
 ---
 
-## 🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)
+## 🖥️ Option 1: Full 1-Click Setup on Any Linux VPS (Ubuntu / Debian)
 
-Follow these exact step-by-step commands on a fresh server:
+### 🚀 **Option 1A: The Single 1-Line Command (Full Auto Setup)**
+Copy and paste this single command into your fresh VPS terminal. It updates the server, installs dependencies, clones your private repository, downloads AI models, and starts the 24/7 PM2 production server automatically:
 
-### Step 1: Update System & Install Required Packages
+```bash
+sudo apt update -y && sudo apt install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw && sudo npm install -g pm2 && cd ~ && rm -rf faceswapper && git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper && cd faceswapper && python3 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && python download_models.py && pm2 delete faceswapper 2>/dev/null || true && pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper && pm2 save
+```
+
+---
+
+### 🛠️ **Option 1B: Step-by-Step Manual Setup (If Preferred)**
+
+#### Step 1: Update System & Install Dependencies
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw
-```
-
-### Step 2: Install Node.js Process Manager (PM2)
-```bash
 sudo npm install -g pm2
 ```
 
-### Step 3: Clone Your Private Repository (with Pre-authenticated API Token)
+#### Step 2: Clone Private Repository
 ```bash
-cd /home/ubuntu   # or your home directory
+cd ~
 git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
 cd faceswapper
 ```
 
-### Step 4: Create Virtual Environment & Install Python Packages
+#### Step 3: Set Up Python Virtual Environment & Install Packages
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
-```
-
-### Step 5: Download AI Models Automatically
-```bash
 python download_models.py
 ```
 
-### Step 6: Start 24/7 Background Process with PM2
+#### Step 4: Start 24/7 PM2 Server
 ```bash
 pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper
 pm2 save
 pm2 startup
 ```
 
-### Step 7: Configure Nginx Reverse Proxy (for Port 80 / 443 & Domain)
-Create Nginx configuration:
+#### Step 5: Configure Nginx Reverse Proxy (Domain / Port 80 & 443)
 ```bash
 sudo nano /etc/nginx/sites-available/faceswapper
 ```
-Paste the following configuration (replace `yourdomain.com` with your domain):
+Paste configuration (replace `yourdomain.com` with your actual domain):
 ```nginx
 server {
     listen 80;
@@ -114,7 +114,7 @@ server {
     }
 }
 ```
-Enable the site and restart Nginx:
+Enable and restart Nginx:
 ```bash
 sudo ln -sf /etc/nginx/sites-available/faceswapper /etc/nginx/sites-enabled/
 sudo nginx -t
@@ -265,6 +265,7 @@ Open browser at: `http://localhost:7860`
 ```
 ai-faceswapper-pro/
 ├── main.py                   # Main FastAPI & Gradio Server for Linux VPS (Dual Auth + Stealth + Queue)
+├── setup_vps.sh              # 1-Click Automated Setup script for Linux VPS
 ├── flux_max_colab.py         # Flagship FLUX.1 [dev] Max 12B Studio (Google Colab GPU)
 ├── flux_max_colab.ipynb      # 1-Click FLUX.1 [dev] Max Colab Notebook
 ├── sdxl_img2img_colab.py     # Uncensored SDXL Image-to-Image & 4K Generator (Google Colab GPU)
