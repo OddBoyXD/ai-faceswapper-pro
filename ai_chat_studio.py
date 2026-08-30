@@ -65,7 +65,7 @@ available_models = get_models()
 if not available_models:
     available_models = ['qwen2.5-coder:32b', 'dolphin-llama3:8b']
 
-with gr.Blocks(title='Titan AI Studio • 48-Core Cluster', theme=gr.themes.Soft(primary_hue='purple')) as demo:
+with gr.Blocks(title='Titan AI Studio') as demo:
     gr.HTML("<div style='text-align: center; margin-bottom: 12px;'><h1 style='font-size: 2.2rem; font-weight: 800; color: #a855f7;'>⚡ Titan AI Studio (48 EPYC Cores • 377 GB RAM)</h1><p style='color: #94a3b8; font-size: 1.05rem;'>Uncensored & Code Master LLM Supercluster</p></div>")
     
     with gr.Sidebar(position='left'):
@@ -78,7 +78,7 @@ with gr.Blocks(title='Titan AI Studio • 48-Core Cluster', theme=gr.themes.Soft
     chat = gr.ChatInterface(
         fn=chat_stream,
         additional_inputs=[model_dropdown, persona_radio, temperature, max_tokens],
-        chatbot=gr.Chatbot(label='Conversation', show_copy_button=True, render_markdown=True, height=580),
+        chatbot=gr.Chatbot(height=580),
         textbox=gr.Textbox(placeholder='Ask anything, request complete code, or explain complex logic...', container=False, scale=7),
         submit_btn='🚀 Send',
         stop_btn='🛑 Stop',
