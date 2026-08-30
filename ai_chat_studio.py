@@ -78,13 +78,7 @@ with gr.Blocks(title='Titan AI Studio') as demo:
     chat = gr.ChatInterface(
         fn=chat_stream,
         additional_inputs=[model_dropdown, persona_radio, temperature, max_tokens],
-        chatbot=gr.Chatbot(height=580),
-        textbox=gr.Textbox(placeholder='Ask anything, request complete code, or explain complex logic...', container=False, scale=7),
-        submit_btn='🚀 Send',
-        stop_btn='🛑 Stop',
-        retry_btn='🔄 Retry',
-        undo_btn='↩️ Undo',
-        clear_btn='🗑️ Clear Chat'
+        textbox=gr.Textbox(placeholder='Ask anything, request complete code, or explain complex logic...', container=False, scale=7)
     )
 
 if __name__ == '__main__':
