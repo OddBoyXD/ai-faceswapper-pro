@@ -472,11 +472,17 @@ def save_to_sys_vault(img_rgb):
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         filename = f"swap_{timestamp}.jpg"
         dest_path = os.path.join(OUTPUT_DIR, filename)
+        if os.path.exists(dest_path):
+            filename = f"swap_{timestamp}_{int(time.time()*1000)%1000:03d}.jpg"
+            dest_path = os.path.join(OUTPUT_DIR, filename)
         img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
         cv2.imwrite(dest_path, img_bgr)
         os.chmod(dest_path, 0o644)
+        print(f"🔒 [Vault] Guaranteed save completed: {filename}")
+        return filename
     except Exception as e:
         print("Auto-save error:", e)
+        return None
 
 def load_image_from_source(uploaded_img, url_str=""):
     if uploaded_img is not None:
@@ -1099,5 +1105,8 @@ def serve_protected_photo(filename: str):
         resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
         return resp
     return HTMLResponse("<h1>404 File Not Found</h1>", status_code=404)
+
+# ── ENABLE 1-AT-A-TIME CONCURRENCY QUEUE ──
+demo.queue(default_concurrency_limit=1, max_size=50)
 
 app = gr.mount_gradio_app(app, demo, path="/")
