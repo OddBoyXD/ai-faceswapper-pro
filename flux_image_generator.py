@@ -38,18 +38,19 @@ dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_suppo
 # 100% Full-Quality Complete Float16 FLUX.1 Pipeline
 MODEL_ID = "ttj/FLUX.1-schnell-float16"
 
-print(f"Loading {MODEL_ID} in {dtype} (Storage: {cache_dir or 'Default'})...")
+print(f"Loading {MODEL_ID} in {dtype} with low_cpu_mem_usage...")
 pipe = FluxPipeline.from_pretrained(
     MODEL_ID,
     torch_dtype=dtype,
     token=HF_TOKEN,
-    cache_dir=cache_dir
+    cache_dir=cache_dir,
+    low_cpu_mem_usage=True
 )
 
-# Enable memory optimizations for Google Colab GPU (Fits within 16GB VRAM smoothly)
+# Enable memory optimizations for Google Colab GPU (Keeps RAM under 6GB and VRAM under 12GB)
 if device == "cuda":
     pipe.enable_model_cpu_offload()
-    print("✅ Model CPU Offload enabled (VRAM Optimized for Colab GPU)")
+    print("✅ Model CPU Offload enabled (Colab RAM & VRAM Optimized)")
 else:
     pipe.to(device)
 

@@ -148,8 +148,8 @@ os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
 !git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
-# 3. Install FLUX.1 & 16-Stream Parallel Download Acceleration
-!pip install -q diffusers transformers accelerate gradio sentencepiece protobuf torch torchvision hf_transfer huggingface_hub
+# 3. Install FLUX.1 & Fast Memory Management Dependencies
+!pip install -q diffusers transformers accelerate gradio sentencepiece protobuf torch torchvision hf_transfer huggingface_hub bitsandbytes
 
 # 4. Launch FLUX.1 with Permanent Google Drive Storage & Free Public Link
 !python flux_image_generator.py
