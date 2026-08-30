@@ -1,6 +1,6 @@
-# ⚡ AI Face Swapper Pro & Uncensored SDXL Studio • Complete Guide
+# ⚡ AI Face Swapper Pro & Uncensored AI Creation Suite • Complete Guide
 
-An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Image Suite powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, **Stable Diffusion XL (SDXL Base 1.0)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
+An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Creation Suite powered by **InsightFace (InSwapper-128)**, **GFPGAN v1.4 (Ultra HD)**, **Black Forest Labs (FLUX.1 [dev] Max 12B)**, **Stable Diffusion XL (SDXL Base 1.0)**, and **FastAPI / Gradio**. Features visual multi-person selector, zero-browser-history stealth camouflage, role-based dual encrypted vaults, and dynamic admin access controls.
 
 ---
 
@@ -9,17 +9,19 @@ An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Image Suite powe
 2. [🔑 Access Passwords & Roles](#-access-passwords--roles)
 3. [🖥️ Option 1: Full A-to-Z Installation on Any Linux VPS (Ubuntu / Debian)](#️-option-1-full-a-to-z-installation-on-any-linux-vps-ubuntu--debian)
 4. [🎨 Option 2: Uncensored SDXL Studio (Image-to-Image & 4K Generator) on Google Colab](#-option-2-uncensored-sdxl-studio-image-to-image--4k-generator-on-google-colab)
-5. [⚡ Option 3: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab](#-option-3-fast-gpu-face-swap-inswapper--gfpgan-on-google-colab)
-6. [🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-4-free-gpu-on-kaggle-30h-free-gpu-weekly)
-7. [☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-5-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
-8. [💻 Option 6: Local Setup on Windows / Mac PC](#-option-6-local-setup-on-windows--mac-pc)
-9. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
-10. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
+5. [🌟 Option 3: FLUX.1 [dev] Max Version (Flagship 12B Flow Transformer) on Google Colab](#-option-3-flux1-dev-max-version-flagship-12b-flow-transformer-on-google-colab)
+6. [⚡ Option 4: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab](#-option-4-fast-gpu-face-swap-inswapper--gfpgan-on-google-colab)
+7. [🚀 Option 5: Free GPU on Kaggle (30h Free GPU Weekly)](#-option-5-free-gpu-on-kaggle-30h-free-gpu-weekly)
+8. [☁️ Option 6: 100% Free 24/7 Hosting on Hugging Face Spaces](#️-option-6-100-free-247-hosting-on-hugging-face-spaces-16-gb-ram)
+9. [💻 Option 7: Local Setup on Windows / Mac PC](#-option-7-local-setup-on-windows--mac-pc)
+10. [📁 Project Architecture & File Structure](#-project-architecture--file-structure)
+11. [🛠️ Useful Maintenance Commands](#️-useful-maintenance-commands)
 
 ---
 
 ## 🌟 Features & Capabilities
 
+* **🌟 FLUX.1 [dev] Max (Black Forest Labs • Colab GPU)**: The flagship 12B parameter guidance-distilled flow transformer for the absolute peak of photorealism, perfect human anatomy/hands, complex lighting, and sharp typography.
 * **🖼️ Reference Image-to-Image Editor (SDXL • Colab GPU)**: Upload any reference photo and transform clothing, hairstyles, lighting, and backgrounds in ~2.5 seconds with adjustable transformation strength. 100% uncensored.
 * **🎨 4K Photorealistic Text-to-Image (SDXL • Colab GPU)**: Sub-3 second generation with cinematic depth-of-field, realistic skin textures, and custom aspect ratios (1:1, 9:16, 16:9, 4:5).
 * **👤 1:1 Single Face Swap (VPS & Colab)**: Instant sub-second swapping using InSwapper-128 + Ultra HD facial restoration with GFPGAN.
@@ -124,7 +126,7 @@ sudo systemctl restart nginx
 ## 🎨 Option 2: Uncensored SDXL Studio (Image-to-Image & 4K Generator) on Google Colab
 
 > [!TIP]
-> **Features:**  
+> **Recommended for Fast Creation & Reference Editing:**  
 > * 🖼️ **Reference Image-to-Image:** Upload any photo and change clothes, hair, background, or lighting in ~2.5 seconds!  
 > * 🎨 **4K Text-to-Image:** Sub-3 second generation with 100% uncensored freedom.  
 > * ⚡ **Lightweight & Fast:** Downloads in **~25 seconds** (~6.6 GB) and runs with zero memory lag on Free T4 GPU.
@@ -147,7 +149,32 @@ Paste this into a **Google Colab** code cell:
 
 ---
 
-## ⚡ Option 3: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab
+## 🌟 Option 3: FLUX.1 [dev] Max Version (Flagship 12B Flow Transformer) on Google Colab
+
+> [!IMPORTANT]
+> **The #1 Highest Quality AI Image Generator in the World:**  
+> * 💎 **Flagship 12B Flow Transformer:** Peak photorealism, perfect human anatomy, lifelike skin textures, and flawless typography.  
+> * ⚡ **Optimized for Colab GPU:** Uses official 4-bit NF4 quantized weights (~6.8 GB) to download in **~25s** and run smoothly within T4 GPU VRAM without crashing.
+
+Paste this into a **Google Colab** code cell:
+
+```python
+# 1. Step out and clone fresh repository with Auth Token
+%cd /content
+!rm -rf /content/faceswapper
+!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+%cd /content/faceswapper
+
+# 2. Install FLUX [dev] Max Dependencies
+!pip install -q diffusers transformers accelerate gradio sentencepiece protobuf torch torchvision bitsandbytes huggingface_hub
+
+# 3. Launch FLUX.1 [dev] Max Studio with Free Public Live Link
+!python flux_max_colab.py
+```
+
+---
+
+## ⚡ Option 4: Fast GPU Face Swap (InSwapper + GFPGAN) on Google Colab
 
 ```python
 # 1. Step out and clone repository with Token
@@ -172,7 +199,7 @@ app.demo.launch(share=True)
 
 ---
 
-## 🚀 Option 4: Free GPU on Kaggle (30h Free GPU Weekly)
+## 🚀 Option 5: Free GPU on Kaggle (30h Free GPU Weekly)
 
 > [!IMPORTANT]
 > In Kaggle sidebar: Turn **Internet ON** and set **Accelerator to GPU T4 x2**.
@@ -195,7 +222,7 @@ app.demo.launch(share=True)
 
 ---
 
-## ☁️ Option 5: 100% Free 24/7 Hosting on Hugging Face Spaces (16 GB RAM)
+## ☁️ Option 6: 100% Free 24/7 Hosting on Hugging Face Spaces (16 GB RAM)
 
 1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and click **"Create new Space"**.
 2. **Space Name**: `ai-faceswapper`
@@ -205,7 +232,7 @@ app.demo.launch(share=True)
 
 ---
 
-## 💻 Option 6: Local Setup on Windows / Mac PC
+## 💻 Option 7: Local Setup on Windows / Mac PC
 
 ### Windows (PowerShell):
 ```powershell
@@ -238,6 +265,8 @@ Open browser at: `http://localhost:7860`
 ```
 ai-faceswapper-pro/
 ├── main.py                   # Main FastAPI & Gradio Server for Linux VPS (Dual Auth + Stealth + Queue)
+├── flux_max_colab.py         # Flagship FLUX.1 [dev] Max 12B Studio (Google Colab GPU)
+├── flux_max_colab.ipynb      # 1-Click FLUX.1 [dev] Max Colab Notebook
 ├── sdxl_img2img_colab.py     # Uncensored SDXL Image-to-Image & 4K Generator (Google Colab GPU)
 ├── sdxl_colab.ipynb          # 1-Click SDXL Colab Notebook
 ├── app.py                    # Fast InSwapper + GFPGAN runner
