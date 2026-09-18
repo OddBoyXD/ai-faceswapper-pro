@@ -23,7 +23,7 @@ fi
 
 echo "📥 [3/5] Cloning private repository into $WORK_DIR..."
 rm -rf "$WORK_DIR"
-git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git "$WORK_DIR"
+git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git "$WORK_DIR"
 cd "$WORK_DIR"
 
 # 4. Virtual Environment & Models

@@ -51,7 +51,7 @@ An enterprise-grade, high-accuracy AI Face Swapper & Uncensored Creation Suite p
 Copy and paste this **single line** into your Ubuntu terminal. It automatically updates packages, installs PM2, clones your private repository, downloads AI models, and launches the 24/7 background server on port `7860`:
 
 ```bash
-export DEBIAN_FRONTEND=noninteractive && sudo apt-get update -y && sudo apt-get install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw && sudo npm install -g pm2 && cd /home/ubuntu || cd ~ && rm -rf faceswapper && git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper && cd faceswapper && python3 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && python download_models.py && pm2 delete faceswapper 2>/dev/null || true && pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper && pm2 save
+export DEBIAN_FRONTEND=noninteractive && sudo apt-get update -y && sudo apt-get install -y python3 python3-pip python3-venv git ffmpeg libsm6 libxext6 libgl1 nodejs npm nginx ufw && sudo npm install -g pm2 && cd /home/ubuntu || cd ~ && rm -rf faceswapper && git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git faceswapper && cd faceswapper && python3 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && python download_models.py && pm2 delete faceswapper 2>/dev/null || true && pm2 start "venv/bin/uvicorn main:app --host 127.0.0.1 --port 7860" --name faceswapper && pm2 save
 ```
 
 ---
@@ -107,7 +107,7 @@ Paste this into a **Google Colab** code cell:
 # 1. Step out and clone fresh repository with Auth Token
 %cd /content
 !rm -rf /content/faceswapper
-!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+!git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
 # 2. Install SDXL Dependencies
@@ -132,7 +132,7 @@ Paste this into a **Google Colab** code cell:
 # 1. Step out and clone fresh repository with Auth Token
 %cd /content
 !rm -rf /content/faceswapper
-!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+!git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
 # 2. Install FLUX [dev] Max Dependencies
@@ -150,7 +150,7 @@ Paste this into a **Google Colab** code cell:
 # 1. Step out and clone repository with Token
 %cd /content
 !rm -rf /content/faceswapper
-!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /content/faceswapper
+!git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git /content/faceswapper
 %cd /content/faceswapper
 
 # 2. Install Dependencies
@@ -176,7 +176,7 @@ app.demo.launch(share=True)
 
 ```python
 # 1. Clone Private Repository to Kaggle Working Directory
-!git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git /kaggle/working/faceswapper
+!git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git /kaggle/working/faceswapper
 %cd /kaggle/working/faceswapper
 
 # 2. Install Dependencies
@@ -198,7 +198,7 @@ app.demo.launch(share=True)
 2. **Space Name**: `ai-faceswapper`
 3. **SDK**: Select **Gradio**.
 4. **Hardware**: Choose **Free (2 vCPU • 16 GB RAM • 50GB Disk)**.
-5. Connect your GitHub repository `https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git`.
+5. Connect your GitHub repository `https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git`.
 
 ---
 
@@ -206,7 +206,7 @@ app.demo.launch(share=True)
 
 ### Windows (PowerShell):
 ```powershell
-git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
+git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git faceswapper
 cd faceswapper
 python -m venv venv
 .\venv\Scripts\activate
@@ -218,7 +218,7 @@ Open browser at: `http://localhost:7860`
 
 ### macOS / Linux:
 ```bash
-git clone https://OddBoyXdxd69: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@github.com/OddBoyXdxd69/ai-faceswapper-pro.git faceswapper
+git clone https://OddBoyXD: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@github.com/OddBoyXD/ai-faceswapper-pro.git faceswapper
 cd faceswapper
 python3 -m venv venv
 source venv/bin/activate
