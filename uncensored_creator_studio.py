@@ -119,65 +119,40 @@ def edit_image_to_image(init_image, instruction, strength, steps, cfg, seed):
     except Exception as e:
         return None, f"❌ Error: {str(e)}"
 
-with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition") as demo:
+with gr.Blocks(title="⚡ AI Unrestricted Studio • Pro Edition") as demo:
     gr.HTML("""
-    <style>
-    @media (max-width: 768px) {
-        .gradio-container { padding: 4px !important; margin: 0 !important; max-width: 100% !important; }
-        button { min-height: 48px !important; font-size: 16px !important; font-weight: 700 !important; }
-    }
-    .touch-btn {
-        background: linear-gradient(135deg, #ff007f 0%, #7928ca 50%, #0070f3 100%) !important;
-        color: white !important; border: none !important; font-size: 1.1rem !important;
-        font-weight: 800 !important; border-radius: 12px !important; padding: 12px 20px !important;
-    }
-    </style>
-    <div style="text-align: center; margin-bottom: 16px; padding: 8px 0;">
-        <h1 style="background: linear-gradient(90deg, #ff007f, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; font-weight: 900; margin: 0;">⚡ AI UNRESTRICTED STUDIO</h1>
-        <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 4px;">4K Text-to-Image & Smart Instruction Photo Editor • 100% Uncensored • Mobile & Android Ready</p>
+    <div style="text-align: center; margin-bottom: 20px; padding: 10px 0;">
+        <h1 style="background: linear-gradient(90deg, #ff007f, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.3rem; font-weight: 900; margin: 0;">⚡ AI UNRESTRICTED PRO STUDIO</h1>
+        <p style="color: #94a3b8; font-size: 1rem; margin-top: 5px;">High-Accuracy 4K Text-to-Image & Smart Instruction Photo Editor • 100% Uncensored</p>
     </div>
     """)
     
     with gr.Tabs():
         # TAB 1: SMART INSTRUCTION IMAGE EDITOR
-        with gr.TabItem("🪄 Smart Photo Editor (Add Hat, Hair, Clothes)"):
+        with gr.TabItem("🪄 Smart Instruction Photo Editor"):
             with gr.Row():
                 with gr.Column(scale=1):
-                    gr.Markdown("### 1️⃣ Upload Your Photo")
-                    i_img = gr.Image(label="Your Reference Photo", type="pil", height=280)
+                    gr.Markdown("### 1️⃣ Upload Reference Photo")
+                    i_img = gr.Image(label="Reference Image", type="pil", height=320)
                     
-                    gr.Markdown("### 2️⃣ Type What to Change")
+                    gr.Markdown("### 2️⃣ Exact Modification Prompt")
                     i_prompt = gr.Textbox(
-                        label="Command / Instruction Prompt",
-                        placeholder="e.g. 'wearing a black cowboy hat', 'add sunglasses', 'change hair to curly fade', 'standing in Paris at sunset'",
-                        lines=2
+                        label="Instruction / Transformation Prompt",
+                        placeholder="Type exactly what to change (e.g. 'wearing a black fedora hat', 'add dark aviator sunglasses', 'change hairstyle to textured fade', 'standing in Tokyo neon street')",
+                        lines=3
                     )
                     
-                    gr.Markdown("#### ⚡ Quick Android One-Tap Presets:")
-                    with gr.Row():
-                        p_hat = gr.Button("🎩 Add Hat", size="sm")
-                        p_glasses = gr.Button("🕶️ Sunglasses", size="sm")
-                        p_hair = gr.Button("💇 Curly Hair", size="sm")
-                        p_suit = gr.Button("👔 Black Suit", size="sm")
-                        p_beach = gr.Button("🏖️ Beach", size="sm")
-                        
-                    p_hat.click(fn=lambda: "wearing a stylish black fedora hat", outputs=i_prompt)
-                    p_glasses.click(fn=lambda: "wearing cool black designer sunglasses", outputs=i_prompt)
-                    p_hair.click(fn=lambda: "change hairstyle to a modern curly textured fade", outputs=i_prompt)
-                    p_suit.click(fn=lambda: "wearing a luxury tailored black Italian suit", outputs=i_prompt)
-                    p_beach.click(fn=lambda: "standing on a tropical sunny beach with ocean background", outputs=i_prompt)
-                    
-                    with gr.Accordion("⚙️ Precision Tuning (Optional)", open=False):
-                        i_strength = gr.Slider(0.15, 0.85, value=0.45, step=0.05, label="🎯 Edit Intensity (Lower = keeps original image more, Higher = more new changes)")
-                        i_steps = gr.Slider(15, 40, value=25, step=1, label="Steps")
-                        i_cfg = gr.Slider(4.0, 10.0, value=7.0, step=0.5, label="Prompt Adherence")
+                    with gr.Accordion("⚙️ Precision Tuning Controls", open=True):
+                        i_strength = gr.Slider(0.15, 0.85, value=0.45, step=0.05, label="🎯 Edit Intensity (Lower = preserves original photo more, Higher = stronger changes)")
+                        i_steps = gr.Slider(15, 45, value=28, step=1, label="Sampling Steps")
+                        i_cfg = gr.Slider(4.0, 12.0, value=7.5, step=0.5, label="Prompt Adherence (CFG)")
                         i_seed = gr.Textbox(value="-1", label="Seed (-1 = Random)")
                         
-                    i_btn = gr.Button("🪄 Apply AI Edit Now", variant="primary", elem_classes=["touch-btn"])
+                    i_btn = gr.Button("🪄 Render AI Photo Edit", variant="primary")
                     
                 with gr.Column(scale=1):
-                    i_out = gr.Image(label="Edited Photo", type="pil")
-                    i_status = gr.Textbox(label="Status", interactive=False)
+                    i_out = gr.Image(label="Edited Output", type="pil")
+                    i_status = gr.Textbox(label="Process Status", interactive=False)
                     
             i_btn.click(
                 fn=edit_image_to_image,
@@ -186,18 +161,18 @@ with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition") as de
             )
             
         # TAB 2: UNRESTRICTED TEXT-TO-IMAGE
-        with gr.TabItem("🎨 Unrestricted Text-to-Image (4K 0% Censored)"):
+        with gr.TabItem("🎨 4K Unrestricted Text-to-Image"):
             with gr.Row():
                 with gr.Column(scale=1):
-                    gr.Markdown("### 1️⃣ Describe Anything You Want")
+                    gr.Markdown("### 1️⃣ Detailed Text Prompt")
                     t_prompt = gr.Textbox(
-                        label="Prompt (Anything Allowed • 100% Unrestricted)",
-                        placeholder="e.g. '8k raw photo of a cyberpunk samurai standing in neon rain, photorealistic, cinematic lighting, masterpiece'",
+                        label="Prompt (100% Uncensored • Any Theme / Subject)",
+                        placeholder="e.g. '8k raw photo of a cyberpunk mercenary standing in rain, neon reflections, cinematic lighting, 85mm lens, masterpiece'",
                         lines=3
                     )
                     t_neg = gr.Textbox(
                         label="Negative Prompt",
-                        placeholder="deformed, blurry, bad anatomy, disfigured",
+                        placeholder="deformed, blurry, bad anatomy, bad eyes, disfigured, low quality",
                         lines=1
                     )
                     
@@ -207,12 +182,12 @@ with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition") as de
                         value="📱 9:16 (Story / Reel / Phone)"
                     )
                     
-                    with gr.Accordion("⚙️ Quality & Seed Settings", open=False):
+                    with gr.Accordion("⚙️ Generation Settings", open=True):
                         t_steps = gr.Slider(20, 50, value=30, step=1, label="Sampling Steps")
                         t_cfg = gr.Slider(4.0, 12.0, value=7.0, step=0.5, label="Prompt Guidance (CFG)")
-                        t_seed = gr.Textbox(value="-1", label="Seed (-1 for Random)")
+                        t_seed = gr.Textbox(value="-1", label="Seed (-1 = Random)")
                         
-                    t_btn = gr.Button("⚡ Generate 4K Image", variant="primary", elem_classes=["touch-btn"])
+                    t_btn = gr.Button("⚡ Generate 4K Image", variant="primary")
                     
                 with gr.Column(scale=1):
                     t_out = gr.Image(label="Generated 4K Output", type="pil")

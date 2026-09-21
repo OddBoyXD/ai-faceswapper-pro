@@ -14,7 +14,7 @@
 
 ---
 
-[🚀 1-Click Launchers](#-1-click-google-colab-notebooks) • [✨ Key Features](#-features--capabilities) • [📱 Mobile & Android Features](#-mobile--android-friendly-features) • [📜 FAQ](#-frequently-asked-questions)
+[🚀 1-Click Launchers](#-1-click-google-colab-notebooks) • [✨ Key Features](#-features--capabilities) • [📜 FAQ](#-frequently-asked-questions)
 
 </div>
 
@@ -26,28 +26,19 @@ Run free on NVIDIA T4 GPU with zero local installation:
 
 | Notebook | Link | What It Does |
 | :--- | :---: | :--- |
-| 🪄 **AI Unrestricted Creator** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Unrestricted_Creator.ipynb) | **4K Text-to-Image (0% Censorship)** + **Smart Photo Editor** (Add hats, sunglasses, custom hair, change clothes/backgrounds). Mobile touch optimized. |
+| 🪄 **AI Unrestricted Creator** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Unrestricted_Creator.ipynb) | **4K Text-to-Image (0% Censorship)** + **Smart Photo Editor** (Add custom hats, sunglasses, hairstyles, modify clothes & scenes via natural language prompts). |
 | 💎 **AI FaceSwapper Ultra** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Ultra.ipynb) | **4K Ultra-Photorealistic Face Cloning** with micro skin pores, natural eye clarity, and 100% target body/outfit preservation. |
 | ⚡ **AI FaceSwapper Pro** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Pro.ipynb) | Lightning Fast Face Swap (1–2 seconds per photo). |
 | 🌟 **FLUX.1 [dev] Max Studio** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/flux_max_colab.ipynb) | 12B Flow Transformer for photorealistic human anatomy and typography. |
 
 ---
 
-## 📱 Mobile & Android Friendly Features
-
-* 📱 **Full-Screen Responsive Layout**: Engineered specifically to fit mobile browser screens without horizontal scroll.
-* 👆 **Big Touch Buttons**: Easy one-tap execution on Android phones and tablets.
-* ⚡ **One-Tap Quick Presets**: Buttons for `🎩 Add Hat`, `🕶️ Sunglasses`, `💇 Curly Hair`, `👔 Black Suit`, and `🏖️ Beach Scene`.
-* 💾 **Direct Download**: 1-Tap save to Android Gallery.
-
----
-
 ## 🌟 Features & Capabilities
 
-* 🔓 **100% Unrestricted Generation**: No safety blockers or black screens.
-* 🪄 **Smart Instruction-Based Photo Editing**: Type what to add or modify on your photo while preserving facial likeness.
+* 🔓 **100% Unrestricted Generation**: No safety blockers, no black screens, pure creative freedom.
+* 🪄 **Smart Instruction-Based Photo Editing**: Type exact commands to add or modify items on any photo while preserving the original person and pose.
 * 👤 **1:1 Single & Group Face Swap**: Multi-person selector with 4K GFPGAN pore restoration.
-* 👗 **100% Clothes & Body Retention**: Keeps the target outfit, body posture, and background intact.
+* 👗 **100% Clothes & Body Retention**: Keeps the target outfit, body posture, and background intact during face swaps.
 * 🌐 **Instant Public Access**: Gradio Live URL, Localtunnel, or Ngrok sharing.
 
 ---
@@ -55,9 +46,9 @@ Run free on NVIDIA T4 GPU with zero local installation:
 ## ❓ Frequently Asked Questions
 
 <details>
-<summary><b>Q: How do I change someone's hairstyle, add a hat, or put on sunglasses?</b></summary>
+<summary><b>Q: How do I change someone's hairstyle, add a hat, or modify an image?</b></summary>
 <br>
-<b>A:</b> Open <b>AI_Unrestricted_Creator.ipynb</b>, go to the <b>"🪄 Smart Photo Editor"</b> tab, upload your photo, and type <i>"wearing a fedora hat"</i> or tap the one-touch preset buttons!
+<b>A:</b> Open <b>AI_Unrestricted_Creator.ipynb</b>, go to the <b>"🪄 Smart Instruction Photo Editor"</b> tab, upload your photo, and type your exact command in the prompt box (e.g., <i>"wearing a black fedora hat"</i>, <i>"add dark sunglasses"</i>, <i>"curly fade haircut"</i>).
 </details>
 
 <details>
