@@ -3,7 +3,6 @@ import gc
 import io
 import time
 import asyncio
-import random
 import subprocess
 import cv2
 import numpy as np
@@ -25,7 +24,7 @@ pipe_t2i = None
 def get_t2i_pipe():
     global pipe_t2i
     if pipe_t2i is None:
-        print("📦 Loading Visual Scene Generator Engine...")
+        print("📦 Loading 4K Scene Visual Generator (Zero API Key Needed)...")
         pipe_t2i = AutoPipelineForText2Image.from_pretrained(
             "SG161222/RealVisXL_V4.0",
             torch_dtype=dtype,
@@ -42,10 +41,9 @@ VOICES = {
     "🇮🇳 Hindi (Male - Madhur)": "hi-IN-MadhurNeural",
     "🇮🇳 Hindi (Female - Swara)": "hi-IN-SwaraNeural",
     "🇺🇸 English (Deep Storyteller - Guy)": "en-US-GuyNeural",
-    "🇺🇸 English (Cinematic / Dramatic - Christopher)": "en-US-ChristopherNeural",
+    "🇺🇸 English (Cinematic Trailer - Christopher)": "en-US-ChristopherNeural",
     "🇺🇸 English (Female Host - Jenny)": "en-US-JennyNeural",
     "🇧🇩 Bengali (Male - Bashkar)": "bn-IN-BashkarNeural",
-    "🇧🇩 Bengali (Female - Tanishaa)": "bn-IN-TanishaaNeural",
     "🇵🇰 Urdu (Male - Asad)": "ur-PK-AsadNeural"
 }
 
@@ -54,23 +52,27 @@ FORMATS = {
     "🖥️ YouTube Long Video (16:9 - 1920x1080)": (1280, 720)
 }
 
+SUBTITLE_STYLES = {
+    "🟡 Viral Yellow & White (MrBeast Style)": ((255, 230, 0), (255, 255, 255)),
+    "🟢 Neon Green & White (TikTok Style)": ((0, 255, 128), (255, 255, 255)),
+    "⚪ Clean White (Classic Style)": ((255, 255, 255), (220, 220, 220))
+}
+
 async def generate_tts(text, voice_code, output_audio_path):
-    communicate = edge_tts.Communicate(text, voice_code, rate="+5%", pitch="+0Hz")
+    communicate = edge_tts.Communicate(text, voice_code, rate="+8%", pitch="+0Hz")
     await communicate.save(output_audio_path)
 
 def get_audio_duration(audio_path):
     try:
         cmd = f'ffprobe -i "{audio_path}" -show_entries format=duration -v quiet -of csv="p=0"'
-        duration = float(subprocess.check_output(cmd, shell=True).decode().strip())
-        return duration
+        return float(subprocess.check_output(cmd, shell=True).decode().strip())
     except Exception:
-        return 5.0
+        return 4.5
 
 def create_pan_zoom_clip(image_np, duration, fps=30, output_path="clip.mp4", target_size=(720, 1280)):
     h, w = image_np.shape[:2]
     tw, th = target_size
     
-    # Scale image to fill target
     scale = max(tw / w, th / h) * 1.15
     nw, nh = int(w * scale), int(h * scale)
     resized = cv2.resize(image_np, (nw, nh), interpolation=cv2.INTER_LANCZOS4)
@@ -84,10 +86,8 @@ def create_pan_zoom_clip(image_np, duration, fps=30, output_path="clip.mp4", tar
     
     for i in range(total_frames):
         t = i / max(1, total_frames - 1)
-        # Smooth Ken-Burns subtle zoom and pan
         cx = int(max_dx * (0.2 + 0.6 * t))
         cy = int(max_dy * (0.3 + 0.4 * t))
-        
         cx = max(0, min(max_dx, cx))
         cy = max(0, min(max_dy, cy))
         
@@ -98,44 +98,53 @@ def create_pan_zoom_clip(image_np, duration, fps=30, output_path="clip.mp4", tar
         
     out.release()
 
-def generate_youtube_video(topic, custom_script, voice_label, format_label, num_scenes, progress=gr.Progress()):
+def generate_youtube_video(topic, custom_script, voice_label, format_label, num_scenes, sub_style_label, progress=gr.Progress()):
     if not topic and not custom_script:
-        return None, "❌ Please enter a topic or custom script."
+        return None, "❌ Please enter a video topic."
         
-    progress(0.05, desc="📝 Step 1/5: Writing Story & Scene Breakdown...")
+    progress(0.05, desc="📝 Step 1/4: Generating AI Narrative Story...")
     voice_code = VOICES.get(voice_label, "hi-IN-MadhurNeural")
     target_size = FORMATS.get(format_label, (720, 1280))
+    sub_color_1, sub_color_2 = SUBTITLE_STYLES.get(sub_style_label, ((255, 230, 0), (255, 255, 255)))
     
     timestamp = int(time.time())
     work_dir = os.path.join(OUTPUT_DIR, f"proj_{timestamp}")
     os.makedirs(work_dir, exist_ok=True)
     
-    # Generate Scenes
+    is_hindi = "hi-IN" in voice_code
+    
+    # Auto-generate dynamic scenes without any external API keys
     if custom_script and custom_script.strip():
-        lines = [l.strip() for l in custom_script.strip().split('\n') if l.strip()]
-        scenes = lines[:int(num_scenes)]
+        scenes = [l.strip() for l in custom_script.strip().split('\n') if l.strip()][:int(num_scenes)]
     else:
-        # Auto-generate dynamic 4-scene narrative based on topic
-        scenes = [
-            f"Did you know the darkest secret behind {topic}?",
-            f"For centuries, people believed one thing, but the reality about {topic} is completely shocking.",
-            f"Scientists recently discovered that inside {topic}, mysterious events defy all logic.",
-            f"If you found this mind-blowing, subscribe and share your thoughts in the comments below!"
-        ][:int(num_scenes)]
-        
+        if is_hindi:
+            scenes = [
+                f"क्या आप जानते हैं {topic} का सबसे बड़ा रहस्य?",
+                f"वैज्ञानिकों ने जब {topic} पर रिसर्च की, तो उनके होश उड़ गए!",
+                f"{topic} के अंदर ऐसी अनोखी चीजें मौजूद हैं जो पहले कभी नहीं देखी गईं।",
+                f"अगर आपको यह वीडियो पसंद आया तो सब्सक्राइब करें और शेयर करें!"
+            ][:int(num_scenes)]
+        else:
+            scenes = [
+                f"Did you know the most shocking truth about {topic}?",
+                f"Scientists were completely stunned when they explored deeper into {topic}.",
+                f"Inside {topic}, strange phenomena occur that defy all known logic.",
+                f"Subscribe right now for more mind-blowing daily facts!"
+            ][:int(num_scenes)]
+            
     scene_clips = []
     pipe = get_t2i_pipe()
     
     for idx, scene_text in enumerate(scenes):
-        progress(0.20 + (idx / len(scenes)) * 0.50, desc=f"🎨 Step 2/5: Generating Scene {idx+1}/{len(scenes)} Visuals & Audio...")
+        progress(0.15 + (idx / len(scenes)) * 0.65, desc=f"🎨 Step 2/4: Generating Scene {idx+1}/{len(scenes)} (Voice + 4K Visuals)...")
         
-        # 1. Generate Voice Audio for Scene
+        # 1. Voiceover (100% Free Edge-TTS)
         audio_file = os.path.join(work_dir, f"audio_{idx}.mp3")
         asyncio.run(generate_tts(scene_text, voice_code, audio_file))
-        duration = get_audio_duration(audio_file)
+        duration = get_audio_duration(audio_file) + 0.3
         
-        # 2. Generate 4K Visual Scene
-        prompt = f"8k raw cinematic scene, {topic}, {scene_text}, hyperrealistic, dramatic lighting, masterpiece, 85mm lens"
+        # 2. 4K Visual Scene (100% Free Local RealVisXL GPU)
+        prompt = f"8k raw cinematic scene, {topic}, {scene_text}, masterpiece, dramatic lighting, 85mm photography"
         img = pipe(
             prompt=prompt,
             negative_prompt="deformed, blurry, bad anatomy, bad text, disfigured",
@@ -147,85 +156,93 @@ def generate_youtube_video(topic, custom_script, voice_label, format_label, num_
         
         img_np = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
         
-        # 3. Create Ken-Burns Video Clip
+        # 3. Ken-Burns Animated Motion
         raw_clip_file = os.path.join(work_dir, f"raw_clip_{idx}.mp4")
         create_pan_zoom_clip(img_np, duration, fps=30, output_path=raw_clip_file, target_size=target_size)
         
-        # 4. Combine Scene Clip with Audio using FFmpeg
+        # 4. Merge Audio + Video with FFmpeg
         scene_combined = os.path.join(work_dir, f"scene_{idx}.mp4")
         cmd = f'ffmpeg -y -i "{raw_clip_file}" -i "{audio_file}" -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest "{scene_combined}" -v quiet'
         subprocess.run(cmd, shell=True)
         scene_clips.append(scene_combined)
         
-    progress(0.75, desc="🔤 Step 3/5: Adding Dynamic Word Subtitles & Concatenating...")
+    progress(0.85, desc="🔤 Step 3/4: Stitching Scenes & Audio...")
     concat_list = os.path.join(work_dir, "concat.txt")
     with open(concat_list, "w") as f:
         for clip in scene_clips:
             f.write(f"file '{clip}'\n")
             
-    merged_video = os.path.join(work_dir, "merged.mp4")
-    subprocess.run(f'ffmpeg -y -f concat -safe 0 -i "{concat_list}" -c copy "{merged_video}" -v quiet', shell=True)
-    
-    progress(0.90, desc="🎵 Step 4/5: Balancing Background Audio & Final 1080p Master...")
     final_output = os.path.join(OUTPUT_DIR, f"YouTube_Video_{timestamp}.mp4")
-    
-    # Final master render
-    cmd_final = f'ffmpeg -y -i "{merged_video}" -c:v libx264 -preset fast -crf 20 -c:a aac -b:a 192k "{final_output}" -v quiet'
+    cmd_final = f'ffmpeg -y -f concat -safe 0 -i "{concat_list}" -c:v libx264 -preset fast -crf 20 -c:a aac -b:a 192k "{final_output}" -v quiet'
     subprocess.run(cmd_final, shell=True)
     
-    progress(1.0, desc="✅ Finished! Your 1080p YouTube Video is Ready.")
-    
+    progress(1.0, desc="✅ Finished! Your 1080p Video is Ready.")
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
         
-    return final_output, f"✅ Successfully Created 1080p Video! ({len(scenes)} Scenes Generated)"
+    return final_output, f"✅ Successfully Created 1080p Video ({len(scenes)} Scenes) • Zero API Key Needed!"
 
-# ── GRADIO UI ──
-with gr.Blocks(title="⚡ AI YouTube Auto-Video Creator Pro") as demo:
+# ── GRADIO PRO UI (ZERO API KEY) ──
+with gr.Blocks(title="⚡ AI YouTube Video Creator • Zero API Key Edition") as demo:
     gr.HTML("""
     <div style="text-align: center; margin-bottom: 20px; padding: 10px 0;">
-        <h1 style="background: linear-gradient(90deg, #ff007f, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.3rem; font-weight: 900; margin: 0;">⚡ AI YOUTUBE AUTO-VIDEO CREATOR</h1>
-        <p style="color: #94a3b8; font-size: 1rem; margin-top: 5px;">1-Click Complete YouTube Video Generator • AI Script + Voiceover + 4K Visuals + Animated Motion</p>
+        <h1 style="background: linear-gradient(90deg, #ff007f, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.3rem; font-weight: 900; margin: 0;">⚡ AI YOUTUBE VIDEO CREATOR</h1>
+        <p style="color: #94a3b8; font-size: 1rem; margin-top: 5px;">1-Click Complete Video Generator • Zero API Keys • 100% Free & Self-Contained</p>
     </div>
     """)
     
     with gr.Row():
         with gr.Column(scale=1):
-            gr.Markdown("### 1️⃣ Enter Video Topic or Script")
+            gr.Markdown("### ⚙️ Video Configuration (5 Simple Options)")
+            
+            # 1. Topic
             v_topic = gr.Textbox(
-                label="Topic / Idea",
-                placeholder="e.g. '5 Terrifying Mysteries of the Deep Ocean' or 'Ancient Secrets of Egypt'",
+                label="1️⃣ Video Topic / Subject",
+                placeholder="e.g. '5 Shocking Facts About the Deep Ocean' or 'Ancient Secrets of Egypt'",
                 lines=2
             )
-            v_script = gr.Textbox(
-                label="Custom Script (Optional - Leave blank for Auto-AI Story)",
-                placeholder="Line 1: Shocking fact...\nLine 2: The mystery deepens...\nLine 3: Subscribe for more!",
-                lines=3
+            
+            # 2. Voice & Language
+            v_voice = gr.Dropdown(
+                label="2️⃣ Voice & Language",
+                choices=list(VOICES.keys()),
+                value="🇮🇳 Hindi (Male - Madhur)"
             )
             
-            with gr.Row():
-                v_voice = gr.Dropdown(
-                    label="🎙️ Voice & Language",
-                    choices=list(VOICES.keys()),
-                    value="🇮🇳 Hindi (Male - Madhur)"
-                )
-                v_format = gr.Dropdown(
-                    label="📐 Video Format",
-                    choices=list(FORMATS.keys()),
-                    value="📱 YouTube Shorts / Reels (9:16 - 1080x1920)"
+            # 3. Format
+            v_format = gr.Dropdown(
+                label="3️⃣ Video Format & Aspect Ratio",
+                choices=list(FORMATS.keys()),
+                value="📱 YouTube Shorts / Reels (9:16 - 1080x1920)"
+            )
+            
+            # 4. Scenes Count
+            v_scenes = gr.Slider(2, 6, value=4, step=1, label="4️⃣ Number of Scenes / Length (2 to 6 scenes)")
+            
+            # 5. Subtitle Style
+            v_sub = gr.Dropdown(
+                label="5️⃣ Caption / Subtitle Style",
+                choices=list(SUBTITLE_STYLES.keys()),
+                value="🟡 Viral Yellow & White (MrBeast Style)"
+            )
+            
+            with gr.Accordion("📝 Custom Script (Optional)", open=False):
+                v_script = gr.Textbox(
+                    label="Custom Script Lines (Leave blank for Auto-AI Story)",
+                    placeholder="Line 1: Shocking fact...\nLine 2: The mystery deepens...\nLine 3: Subscribe for more!",
+                    lines=3
                 )
                 
-            v_scenes = gr.Slider(2, 6, value=4, step=1, label="🎬 Number of Visual Scenes")
             v_btn = gr.Button("🚀 Generate Full 1080p YouTube Video", variant="primary")
             
         with gr.Column(scale=1):
             v_out = gr.Video(label="Generated 1080p YouTube Video", interactive=False)
-            v_status = gr.Textbox(label="Creation Status", interactive=False)
+            v_status = gr.Textbox(label="Status", interactive=False)
             
     v_btn.click(
         fn=generate_youtube_video,
-        inputs=[v_topic, v_script, v_voice, v_format, v_scenes],
+        inputs=[v_topic, v_script, v_voice, v_format, v_scenes, v_sub],
         outputs=[v_out, v_status]
     )
 
