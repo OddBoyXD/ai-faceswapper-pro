@@ -2,6 +2,9 @@ import os
 import gc
 import io
 import time
+import warnings
+warnings.filterwarnings('ignore')
+
 import torch
 import numpy as np
 from PIL import Image
@@ -12,35 +15,27 @@ from diffusers import AutoPipelineForText2Image, AutoPipelineForImage2Image, DPM
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
-print(f"🚀 Initializing AI Unrestricted Studio on: {device} ({dtype})")
-
 MODEL_ID = "SG161222/RealVisXL_V4.0"
 
-pipe_t2i = None
-pipe_i2i = None
+print(f"🚀 Initializing AI Unrestricted Studio on: {device}")
 
-def load_pipelines():
-    global pipe_t2i, pipe_i2i
-    if pipe_t2i is None:
-        print("📦 Loading RealVisXL v4.0 Photorealism Engine (100% Uncensored)...")
-        pipe_t2i = AutoPipelineForText2Image.from_pretrained(
-            MODEL_ID,
-            torch_dtype=dtype,
-            variant="fp16" if device == "cuda" else None,
-            use_safetensors=True
-        )
-        pipe_t2i.scheduler = DPMSolverMultistepScheduler.from_config(pipe_t2i.scheduler.config, use_karras_sigmas=True)
-        # 100% Uncensored / Zero Safety Filter
-        pipe_t2i.safety_checker = None
-        if device == "cuda":
-            pipe_t2i.enable_model_cpu_offload()
-            
-        print("🪄 Setting up Instruction Image-to-Image Pipeline...")
-        pipe_i2i = AutoPipelineForImage2Image.from_pipe(pipe_t2i)
-        pipe_i2i.safety_checker = None
-        print("✅ Unrestricted AI Engines Loaded Successfully!")
+# Load pipelines cleanly
+pipe_t2i = AutoPipelineForText2Image.from_pretrained(
+    MODEL_ID,
+    torch_dtype=dtype,
+    variant="fp16" if device == "cuda" else None,
+    use_safetensors=True
+)
+pipe_t2i.scheduler = DPMSolverMultistepScheduler.from_config(pipe_t2i.scheduler.config, use_karras_sigmas=True)
+pipe_t2i.safety_checker = None
 
-# Helper for Aspect Ratios
+if device == "cuda":
+    pipe_t2i.enable_model_cpu_offload()
+
+pipe_i2i = AutoPipelineForImage2Image.from_pipe(pipe_t2i)
+pipe_i2i.safety_checker = None
+print("✅ Unrestricted AI Engines 100% Ready!")
+
 RATIOS = {
     "📱 9:16 (Story / Reel / Phone)": (720, 1280),
     "📸 4:5 (Instagram Portrait)": (832, 1040),
@@ -50,7 +45,6 @@ RATIOS = {
 }
 
 def generate_text_to_image(prompt, negative_prompt, ratio_name, steps, cfg, seed):
-    load_pipelines()
     if not prompt or not prompt.strip():
         return None, "❌ Please enter a prompt."
         
@@ -82,7 +76,6 @@ def generate_text_to_image(prompt, negative_prompt, ratio_name, steps, cfg, seed
         return None, f"❌ Error: {str(e)}"
 
 def edit_image_to_image(init_image, instruction, strength, steps, cfg, seed):
-    load_pipelines()
     if init_image is None:
         return None, "❌ Please upload a reference image to edit."
     if not instruction or not instruction.strip():
@@ -93,7 +86,6 @@ def edit_image_to_image(init_image, instruction, strength, steps, cfg, seed):
     else:
         init_image = init_image.convert("RGB")
         
-    # Resize keeping aspect ratio (max dimension 1024)
     w, h = init_image.size
     scale = min(1024 / max(w, h), 1.0)
     new_w, new_h = int((w * scale) // 8) * 8, int((h * scale) // 8) * 8
@@ -105,7 +97,6 @@ def edit_image_to_image(init_image, instruction, strength, steps, cfg, seed):
         
     t0 = time.time()
     try:
-        # Construct enhanced prompt for instruction editing
         full_prompt = f"photorealistic 8k, raw photo, {instruction.strip()}, highly detailed, natural lighting"
         neg_prompt = "cartoon, bad anatomy, blurry, artifacts, lowres, deformed"
         
@@ -128,53 +119,27 @@ def edit_image_to_image(init_image, instruction, strength, steps, cfg, seed):
     except Exception as e:
         return None, f"❌ Error: {str(e)}"
 
-# Custom Mobile-First CSS for Android & Touch Devices
-CUSTOM_CSS = """
-/* Android & Mobile Responsive Tweaks */
-@media (max-width: 768px) {
-    .gradio-container {
-        padding: 6px !important;
-        margin: 0 !important;
-        max-width: 100% !important;
-    }
-    button {
-        min-height: 48px !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
-    }
-    .mobile-btn {
-        width: 100% !important;
-        margin-top: 8px !important;
-    }
-    h1 {
-        font-size: 1.7rem !important;
-    }
-}
-.touch-btn {
-    background: linear-gradient(135deg, #ff007f 0%, #7928ca 50%, #0070f3 100%) !important;
-    color: white !important;
-    border: none !important;
-    font-size: 1.1rem !important;
-    font-weight: 800 !important;
-    border-radius: 12px !important;
-    padding: 12px 20px !important;
-    transition: transform 0.1s ease !important;
-}
-.touch-btn:active {
-    transform: scale(0.97) !important;
-}
-"""
-
-with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition", css=CUSTOM_CSS) as demo:
+with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition") as demo:
     gr.HTML("""
-    <div style="text-align: center; margin-bottom: 16px; padding: 10px 0;">
+    <style>
+    @media (max-width: 768px) {
+        .gradio-container { padding: 4px !important; margin: 0 !important; max-width: 100% !important; }
+        button { min-height: 48px !important; font-size: 16px !important; font-weight: 700 !important; }
+    }
+    .touch-btn {
+        background: linear-gradient(135deg, #ff007f 0%, #7928ca 50%, #0070f3 100%) !important;
+        color: white !important; border: none !important; font-size: 1.1rem !important;
+        font-weight: 800 !important; border-radius: 12px !important; padding: 12px 20px !important;
+    }
+    </style>
+    <div style="text-align: center; margin-bottom: 16px; padding: 8px 0;">
         <h1 style="background: linear-gradient(90deg, #ff007f, #8a2be2, #00e5ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem; font-weight: 900; margin: 0;">⚡ AI UNRESTRICTED STUDIO</h1>
-        <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 4px;">4K Text-to-Image & Smart Instruction Editor • 100% Uncensored • Mobile & Android Friendly</p>
+        <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 4px;">4K Text-to-Image & Smart Instruction Photo Editor • 100% Uncensored • Mobile & Android Ready</p>
     </div>
     """)
     
     with gr.Tabs():
-        # TAB 1: SMART INSTRUCTION IMAGE EDITOR (HAT, SUNGLASSES, HAIR, CLOTHES, BACKGROUND)
+        # TAB 1: SMART INSTRUCTION IMAGE EDITOR
         with gr.TabItem("🪄 Smart Photo Editor (Add Hat, Hair, Clothes)"):
             with gr.Row():
                 with gr.Column(scale=1):
@@ -184,7 +149,7 @@ with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition", css=C
                     gr.Markdown("### 2️⃣ Type What to Change")
                     i_prompt = gr.Textbox(
                         label="Command / Instruction Prompt",
-                        placeholder="e.g. 'wearing a black cowboy hat', 'add black sunglasses', 'change hair to curly fade', 'standing in Paris at sunset'",
+                        placeholder="e.g. 'wearing a black cowboy hat', 'add sunglasses', 'change hair to curly fade', 'standing in Paris at sunset'",
                         lines=2
                     )
                     
@@ -220,7 +185,7 @@ with gr.Blocks(title="⚡ AI Unrestricted Studio • Mobile & 4K Edition", css=C
                 outputs=[i_out, i_status]
             )
             
-        # TAB 2: UNRESTRICTED TEXT-TO-IMAGE (4K PHOTOREALISM)
+        # TAB 2: UNRESTRICTED TEXT-TO-IMAGE
         with gr.TabItem("🎨 Unrestricted Text-to-Image (4K 0% Censored)"):
             with gr.Row():
                 with gr.Column(scale=1):
