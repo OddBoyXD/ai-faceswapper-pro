@@ -1,35 +1,35 @@
 <div align="center">
 
-# ⚡ ANTIGRAVITY AGENT & AI CREATIVE SUITE
+# ⚡ FLUX.2 / FLUX.1 [dev], ANTIGRAVITY AGENT & AI SUITE
 
 <p align="center">
+  <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/FLUX_2_Dev_Colab.ipynb">
+    <img src="https://img.shields.io/badge/Google%20Colab-FLUX.2%20%2F%20FLUX.1%20%5Bdev%5D%20Studio-8a2be2?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open FLUX Dev In Colab"/>
+  </a>
+  <br><br>
   <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Antigravity_Agent.ipynb">
     <img src="https://img.shields.io/badge/Google%20Colab-Antigravity%20Autonomous%20Agent%20(Claude%20%2F%20Gemini%20CLI%20Style)-00f2fe?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open Antigravity Agent In Colab"/>
   </a>
-  <br><br>
   <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_YouTube_AutoCreator.ipynb">
     <img src="https://img.shields.io/badge/Google%20Colab-1--Click%20YouTube%20Video%20Creator%20(Zero%20API%20Key)-ff0000?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open YouTube AutoCreator In Colab"/>
   </a>
+  <br><br>
   <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Ultra.ipynb">
     <img src="https://img.shields.io/badge/Google%20Colab-FaceSwapper%20Ultra%204K-f9ab00?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open FaceSwapper Ultra In Colab"/>
   </a>
-  <br><br>
   <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Unrestricted_Creator.ipynb">
     <img src="https://img.shields.io/badge/Google%20Colab-Unrestricted%20Creator%204K-e02424?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open Unrestricted Creator In Colab"/>
-  </a>
-  <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/flux_max_colab.ipynb">
-    <img src="https://img.shields.io/badge/Google%20Colab-FLUX.1%2012B%20Max-8a2be2?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open FLUX Max In Colab"/>
   </a>
 </p>
 
 <p align="center">
-  <b>An Elite Suite of Autonomous Agentic AI, 4K Face Swapping & AI Video Creators</b><br>
-  Powered by <b>Qwen2.5-Coder-7B</b> • <b>Edge-TTS</b> • <b>RealVisXL 4K</b> • <b>InsightFace</b> • <b>GFPGAN v1.4 HD</b> • <b>FLUX.1 [dev]</b>
+  <b>Official FLUX.1/FLUX.2 [dev] Replica, Autonomous Agent & 4K Creative Suite</b><br>
+  Powered by <b>Black Forest Labs FLUX</b> • <b>Qwen2.5-Coder-7B</b> • <b>Edge-TTS</b> • <b>RealVisXL 4K</b> • <b>InsightFace</b>
 </p>
 
 ---
 
-[🚀 Direct 1-Click Launchers](#-direct-1-click-google-colab-launchers) • [⚡ Antigravity Autonomous Agent](#-antigravity-autonomous-agent-claude--gemini-cli-style) • [🎬 Video AutoCreator Guide](#-ai-youtube-video-creator-zero-api-keys) • [💎 Face Swapper](#-faceswapper-ultra-4k) • [📜 FAQ](#-frequently-asked-questions)
+[🚀 Direct 1-Click Launchers](#-direct-1-click-google-colab-launchers) • [🌟 FLUX.2 / FLUX.1 [dev]](#-flux2--flux1-dev-studio) • [⚡ Antigravity Agent](#-antigravity-autonomous-agent-claude--gemini-cli-style) • [🎬 Video AutoCreator](#-ai-youtube-video-creator-zero-api-keys) • [💎 Face Swapper](#-faceswapper-ultra-4k) • [📜 FAQ](#-frequently-asked-questions)
 
 </div>
 
@@ -41,52 +41,36 @@ Click any link below to open directly in Google Colab (Runs on Free NVIDIA T4 GP
 
 | AI Studio | 1-Click Launch Link | What It Does |
 | :--- | :---: | :--- |
+| 🌟 **FLUX.2 / FLUX.1 [dev]** | 👉 [**Launch FLUX_2_Dev_Colab.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/FLUX_2_Dev_Colab.ipynb) | **Exact Hugging Face Replica**: 12B–32B Rectified Flow Transformer with exact official UI, prompt box, seed control & aspect ratio sliders! |
 | ⚡ **Antigravity Autonomous Agent** | 👉 [**Launch AI_Antigravity_Agent.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Antigravity_Agent.ipynb) | **Claude Code & Gemini CLI Style**: Autonomous Agent that runs commands, writes code, creates files, and builds complete tools or apps! |
 | 🎬 **YouTube Auto-Creator** | 👉 [**Launch AI_YouTube_AutoCreator.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_YouTube_AutoCreator.ipynb) | **100% Zero API Keys**: Generates 40+ Sec 1080p Shorts/Reels (AI Script + Voice + 4K Visuals + Viral Captions + BGM). |
 | 💎 **FaceSwapper Ultra** | 👉 [**Launch AI_FaceSwapper_Ultra.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Ultra.ipynb) | **4K Photorealistic Face Cloning**: Replaces face with skin pores & natural eyes while keeping 100% target clothes/body. |
 | 🪄 **Unrestricted Creator** | 👉 [**Launch AI_Unrestricted_Creator.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Unrestricted_Creator.ipynb) | **4K Text-to-Image (0% Censorship)** + **Smart Photo Editor** (Add hats, sunglasses, custom hair, change clothes). |
-| 🌟 **FLUX.1 [dev] Max** | 👉 [**Launch flux_max_colab.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/flux_max_colab.ipynb) | Flagship 12B parameter model for perfect hands, anatomy, and typography. |
-| ⚡ **FaceSwapper Standard** | 👉 [**Launch AI_FaceSwapper_Pro.ipynb**](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Pro.ipynb) | Lightning Fast Face Swap (1–2 seconds per photo). |
 
 ---
 
-## ⚡ Antigravity Autonomous Agent (Claude / Gemini CLI Style)
+## 🌟 FLUX.2 / FLUX.1 [dev] Studio
 
 ```
-[ 💡 User Prompt ] ➔ [ 🤖 Autonomous Reasoning ] ➔ [ ⚡ Auto Tool Execution ] ➔ [ 📦 Working Projects / Output ]
+[ 💡 Prompt: "a tiny astronaut hatching from an egg on the moon" ] ➔ [ ⚡ FLUX Transformer ] ➔ [ 🖼️ Photorealistic 4K Output ]
 ```
 
-1. **Autonomous Tool Loop**: Takes your prompt, decides which files to write, creates the folders, and executes the compile commands automatically.
-2. **Interactive Workspace File Explorer**: Directly view, browse, and download generated projects, scripts, and output files in 1 click.
-3. **Self-Healing & Error Fixing**: Reads terminal outputs and fixes errors automatically.
-
----
-
-## 🎬 AI YouTube Video Creator (Zero API Keys)
-
-```
-[ 💡 Topic: "5 Facts About Deep Space" ] ➔ [ 📝 40s+ Script ] ➔ [ 🎙️ English Voice ] ➔ [ 🎨 4K Visuals ] ➔ [ 🎬 1080p MP4 ]
-```
-
-1. **Video Subject**: Enter any topic (e.g., *"5 Shocking Facts About the Deep Ocean"*).
-2. **Voice & Language**: English (`Cinematic Storyteller`), Hindi (`Madhur` / `Swara`), Bengali, Urdu.
-3. **Aspect Ratio**: `9:16` (Shorts / Reels / TikTok) or `16:9` (Standard YouTube).
-4. **Subtitles & Music**: High-contrast Yellow/White viral captions + auto-ducking BGM.
+1. **Exact Official UI**: Direct replica of the [Hugging Face Space](https://huggingface.co/spaces/black-forest-labs/FLUX.1-dev).
+2. **Settings**:
+   - **Width & Height**: 256 to 2048 px.
+   - **Guidance Scale**: 1.0 to 15.0.
+   - **Inference Steps**: 1 to 50 steps.
+   - **Seed Control**: Fixed seed or randomize.
+3. **Auto-Save**: Saves directly to `/MyDrive/FLUX_Images/` in your Google Drive.
 
 ---
 
 ## ❓ Frequently Asked Questions
 
 <details>
-<summary><b>Q: Does the Antigravity Agent require any API keys?</b></summary>
+<summary><b>Q: How does FLUX run on Google Colab?</b></summary>
 <br>
-<b>A:</b> No! It runs the local <b>Qwen2.5-Coder-7B-Instruct</b> model directly on Google Colab's Free GPU with zero external keys.
-</details>
-
-<details>
-<summary><b>Q: How do I download my generated files or code?</b></summary>
-<br>
-<b>A:</b> Switch to the <b>Workspace Files & Downloads</b> tab in the WebUI to click and download any generated project, script, or asset instantly.
+<b>A:</b> It uses CPU offloading and float16/bfloat16 precision so that the flagship 12B parameter FLUX transformer runs smoothly on Colab's free GPU without crashing.
 </details>
 
 ---
