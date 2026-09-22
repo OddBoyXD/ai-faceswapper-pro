@@ -411,7 +411,7 @@ with gr.Blocks(title="⛏️ AI Minecraft Mod Maker • Qwen2.5-Coder Edition", 
         with gr.Tab("💬 AI Modding Assistant (Chat with Qwen2.5-Coder)"):
             gr.Markdown("Ask anything! e.g. *'Write a Fabric 1.20.1 Java class for an Obsidian Shield that reflects arrows'* or *'How do I make custom mob loot tables?'*")
             
-            chatbot = gr.Chatbot(label="Qwen2.5-Coder Minecraft Assistant", height=450)
+            chatbot = gr.Chatbot(label="Qwen2.5-Coder Minecraft Assistant", type="messages", height=450)
             with gr.Row():
                 chat_msg = gr.Textbox(
                     placeholder="Type your Minecraft modding question or request in English or Hindi...",
@@ -424,15 +424,16 @@ with gr.Blocks(title="⛏️ AI Minecraft Mod Maker • Qwen2.5-Coder Edition", 
                 if not msg.strip():
                     return "", hist
                 hist = hist or []
-                hist.append((msg, ""))
+                hist.append({"role": "user", "content": msg})
+                hist.append({"role": "assistant", "content": "⚡ *Crafting Minecraft Java code with Qwen2.5-Coder...*"})
                 return "", hist
                 
             def bot_chat(hist):
                 if not hist:
                     return hist
-                user_msg = hist[-1][0]
-                for partial in generate_ai_response(user_msg, hist[:-1]):
-                    hist[-1] = (user_msg, partial)
+                user_msg = hist[-2]["content"] if len(hist) >= 2 else hist[-1]["content"]
+                for partial in generate_ai_response(user_msg, []):
+                    hist[-1] = {"role": "assistant", "content": partial}
                     yield hist
                     
             send_btn.click(user_chat, [chat_msg, chatbot], [chat_msg, chatbot]).then(
