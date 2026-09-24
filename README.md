@@ -1,9 +1,16 @@
 <div align="center">
 
 # ⚡ KAGGLE DUAL-GPU & COLAB AI SUITE
-### *FLUX.2 [dev] • Antigravity Agent • 4K Face Swapper • YouTube AutoCreator*
+### *Fooocus • FLUX.2 [dev] • Antigravity Agent • 4K Face Swapper • YouTube AutoCreator*
 
 <p align="center">
+  <a href="https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/Fooocus_Kaggle.ipynb">
+    <img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open Fooocus in Kaggle"/>
+  </a>
+  <a href="https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/Fooocus_Kaggle.ipynb">
+    <img src="https://img.shields.io/badge/Google%20Colab-Fooocus%20AI%20Studio-3b82f6?style=for-the-badge&logo=googlecolab&logoColor=white" alt="Open Fooocus In Colab"/>
+  </a>
+  <br><br>
   <a href="https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/FLUX_2_Dev.ipynb">
     <img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open FLUX.2 in Kaggle"/>
   </a>
@@ -40,7 +47,7 @@
 
 ---
 
-[🚀 1-Click Launchers](#-1-click-launchers-kaggle--colab) • [⚡ Why Kaggle?](#-why-kaggle-is-recommended) • [🛠️ 30-Sec Kaggle Guide](#-how-to-run-on-kaggle-in-30-seconds) • [📜 FAQ](#-frequently-asked-questions)
+[🚀 1-Click Launchers](#-1-click-launchers-kaggle--colab) • [🎨 Fooocus AI](#-fooocus-ai-studio) • [⚡ Why Kaggle?](#-why-kaggle-is-recommended) • [📜 FAQ](#-frequently-asked-questions)
 
 </div>
 
@@ -52,50 +59,32 @@ Click any badge to launch on **Kaggle (Dual GPU, No Disconnects)** or **Google C
 
 | AI Studio | 🚀 Open in Kaggle (Recommended) | 🌐 Open in Colab | What It Does |
 | :--- | :---: | :---: | :--- |
+| 🎨 **Fooocus Studio** | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/Fooocus_Kaggle.ipynb) | [Colab](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/Fooocus_Kaggle.ipynb) | **Midjourney-Grade Photorealism**: Built-in ImagePrompt, FaceSwap, Inpainting, Outpainting & 100+ artistic styles! |
 | 🌟 **FLUX.2 [dev] Studio** | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/FLUX_2_Dev.ipynb) | [Colab](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/FLUX_2_Dev.ipynb) | **Exact HF Replica**: Multi-image reference gallery, AI prompt upsampling, seed control & 4K photorealism. |
 | 💎 **FaceSwapper Ultra 4K** | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Ultra.ipynb) | [Colab](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_FaceSwapper_Ultra.ipynb) | **4K Face Cloning**: Replaces face with skin pores & natural eyes while keeping 100% target body/clothes. |
 | 🎬 **YouTube Auto-Creator** | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/AI_YouTube_AutoCreator.ipynb) | [Colab](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_YouTube_AutoCreator.ipynb) | **40+ Sec 1080p Shorts/Reels**: English narrator + burned viral captions + background music with ducking. |
 | ⚡ **Antigravity Agent** | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Antigravity_Agent.ipynb) | [Colab](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Antigravity_Agent.ipynb) | **Claude Code & Gemini CLI Style**: Autonomous Agent that runs commands, writes code, and manages files. |
-| 🪄 **Unrestricted Creator** | [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Unrestricted_Creator.ipynb) | [Colab](https://colab.research.google.com/github/OddBoyXD/ai-faceswapper-pro/blob/main/AI_Unrestricted_Creator.ipynb) | **4K Text-to-Image (0% Censorship)** + **Smart Photo Editor** (Add hats, sunglasses, custom hair, clothes). |
 
 ---
 
-## ⚡ Why Kaggle is Recommended:
+## 🎨 Fooocus AI Studio
 
-| Feature | 🏆 Kaggle Notebooks | ⚠️ Google Colab (Free) |
-| :--- | :---: | :---: |
-| **GPU Power** | **Dual NVIDIA T4 (2x GPUs)** / P100 (16GB) | 1x NVIDIA T4 |
-| **Weekly Free GPU Time** | **30 Hours / Week (Free)** | Variable / Limited daily |
-| **Idle Timeout** | **Stays running reliably** | Disconnects after 10–15 mins |
-| **Background Run** | **Runs even with your browser closed!** | Must keep tab open |
-| **Cost** | **100% Free Forever (by Google)** | 100% Free |
+```
+[ 💡 Prompt / Face Reference ] ➔ [ 🪄 GPT2 Expansion ] ➔ [ ⚡ SDXL Engine ] ➔ [ 🖼️ Midjourney-Grade 4K ]
+```
 
----
-
-## 🛠️ How to Run on Kaggle in 30 Seconds:
-
-1. Click any **`Open in Kaggle`** button above.
-2. Sign in to Kaggle with your Google account.
-3. On the right-side panel:
-   - Under **Settings ➔ Accelerator**, select **`GPU T4 x 2`**.
-   - Under **Settings ➔ Internet**, toggle **`Internet on`** (requires 1-time phone SMS verification).
-4. Click **Run All** (or run cells in order).
-5. Click your public **`.gradio.live`** link and enjoy!
+1. **Midjourney Quality**: Generates ultra-photorealistic images with rich depth and cinematic lighting.
+2. **Built-in FaceSwap**: Upload a reference face to swap it onto any generated body, pose, or character.
+3. **Inpaint & Outpaint**: Erase and modify any part of an image or extend the scene.
 
 ---
 
 ## ❓ Frequently Asked Questions
 
 <details>
-<summary><b>Q: Is Kaggle 100% free?</b></summary>
+<summary><b>Q: Is Fooocus 100% free on Kaggle?</b></summary>
 <br>
-<b>A:</b> Yes! Kaggle is owned by Google and provides 30 hours of free dual-GPU power every week with zero credit cards required.
-</details>
-
-<details>
-<summary><b>Q: Do these tools require any API keys?</b></summary>
-<br>
-<b>A:</b> No! All tools (FLUX.2, YouTube AutoCreator, FaceSwapper Ultra, Antigravity Agent) are 100% free and self-contained with zero API keys required.
+<b>A:</b> Yes! Fooocus runs on Kaggle's free Dual-GPU (NVIDIA T4 x 2) with zero API keys and generates images in 4–6 seconds.
 </details>
 
 ---
