@@ -405,7 +405,7 @@ def render_full_story_video(scenes: List[Dict[str, Any]], output_video_path: str
             "ffmpeg", "-y",
             "-loop", "1", "-i", frame_path,
             "-i", scene["audio_path"],
-            "-c:v", "libx264", "-tune", "stillimage",
+            "-c:v", "libx264", "-preset", "ultrafast", "-tune", "stillimage",
             "-c:a", "aac", "-b:a", "192k",
             "-pix_fmt", "yuv420p",
             "-t", str(dur),
